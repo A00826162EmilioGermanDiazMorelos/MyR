@@ -1,0 +1,2593 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> PROGRAM ID PUNT_COMA vars function MAIN block
+Rule 2     vars -> VARS var_list
+Rule 3     vars -> empty
+Rule 4     var_list -> var_list COMA var
+Rule 5     var_list -> var PUNT_COMA
+Rule 6     var -> type ID
+Rule 7     var -> type LEFTSQUARE NUMBER RIGHTSQUARE ID
+Rule 8     type -> INT
+Rule 9     type -> FLOT
+Rule 10    type -> CHAR
+Rule 11    type -> VOID
+Rule 12    empty -> <empty>
+Rule 13    function -> FUNCTION type ID LEFTPAREN param_list RIGHTPAREN vars block
+Rule 14    param_list -> param_list COMA param
+Rule 15    param_list -> param
+Rule 16    param_list -> empty
+Rule 17    param -> INT ID
+Rule 18    param -> FLOT ID
+Rule 19    param -> CHAR ID
+Rule 20    block -> LEFTCURLY statement_list RIGHTCURLY
+Rule 21    statement_list -> statement_list statement
+Rule 22    statement_list -> statement
+Rule 23    statement -> assignment
+Rule 24    statement -> function_call
+Rule 25    statement -> return_statement
+Rule 26    statement -> read_statement
+Rule 27    statement -> write_statement
+Rule 28    statement -> decision_statement
+Rule 29    statement -> repetition_statement
+Rule 30    statement -> vars
+Rule 31    assignment -> ID EQUALS expr PUNT_COMA
+Rule 32    assignment -> ID LEFTSQUARE expr RIGHTSQUARE EQUALS expr PUNT_COMA
+Rule 33    function_call -> ID LEFTPAREN arg_list RIGHTPAREN PUNT_COMA
+Rule 34    function_call -> ID LEFTPAREN RIGHTPAREN PUNT_COMA
+Rule 35    arg_list -> arg_list COMA expr
+Rule 36    arg_list -> expr
+Rule 37    return_statement -> RETURN expr PUNT_COMA
+Rule 38    return_statement -> RETURN PUNT_COMA
+Rule 39    read_statement -> READ LEFTPAREN ID RIGHTPAREN PUNT_COMA
+Rule 40    write_statement -> WRITE LEFTPAREN expr RIGHTPAREN PUNT_COMA
+Rule 41    write_statement -> WRITE LEFTPAREN RIGHTPAREN PUNT_COMA
+Rule 42    decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block
+Rule 43    decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block ELSE block
+Rule 44    repetition_statement -> FOR ID EQUALS expr TO expr DO block
+Rule 45    repetition_statement -> WHILE LEFTPAREN expr RIGHTPAREN DO block
+Rule 46    expr -> expr PLUS expr
+Rule 47    expr -> expr MINUS expr
+Rule 48    expr -> expr MULT expr
+Rule 49    expr -> expr DIV expr
+Rule 50    expr -> expr AND expr
+Rule 51    expr -> expr OR expr
+Rule 52    expr -> expr LESS_THAN expr
+Rule 53    expr -> expr MORE_THAN expr
+Rule 54    expr -> expr EQUAL_TO expr
+Rule 55    expr -> LEFTPAREN expr RIGHTPAREN
+Rule 56    expr -> MINUS expr
+Rule 57    expr -> NUMBER
+Rule 58    expr -> ID
+
+Terminals, with rules where they appear
+
+AND                  : 50
+CHAR                 : 10 19
+COMA                 : 4 14 35
+DIV                  : 49
+DO                   : 44 45
+ELSE                 : 43
+EQUALS               : 31 32 44
+EQUAL_TO             : 54
+FLOT                 : 9 18
+FOR                  : 44
+FUNCTION             : 13
+ID                   : 1 6 7 13 17 18 19 31 32 33 34 39 44 58
+IF                   : 42 43
+INT                  : 8 17
+LEFTCURLY            : 20
+LEFTPAREN            : 13 33 34 39 40 41 42 43 45 55
+LEFTSQUARE           : 7 32
+LESS_THAN            : 52
+MAIN                 : 1
+MINUS                : 47 56
+MORE_THAN            : 53
+MULT                 : 48
+NUMBER               : 7 57
+OR                   : 51
+PLUS                 : 46
+PROGRAM              : 1
+PUNT_COMA            : 1 5 31 32 33 34 37 38 39 40 41
+READ                 : 39
+RETURN               : 37 38
+RIGHTCURLY           : 20
+RIGHTPAREN           : 13 33 34 39 40 41 42 43 45 55
+RIGHTSQUARE          : 7 32
+THEN                 : 42 43
+TO                   : 44
+VARS                 : 2
+VOID                 : 11
+WHILE                : 45
+WRITE                : 40 41
+error                : 
+
+Nonterminals, with rules where they appear
+
+arg_list             : 33 35
+assignment           : 23
+block                : 1 13 42 43 43 44 45
+decision_statement   : 28
+empty                : 3 16
+expr                 : 31 32 32 35 36 37 40 42 43 44 44 45 46 46 47 47 48 48 49 49 50 50 51 51 52 52 53 53 54 54 55 56
+function             : 1
+function_call        : 24
+param                : 14 15
+param_list           : 13 14
+program              : 0
+read_statement       : 26
+repetition_statement : 29
+return_statement     : 25
+statement            : 21 22
+statement_list       : 20 21
+type                 : 6 7 13
+var                  : 4 5
+var_list             : 2 4
+vars                 : 1 13 30
+write_statement      : 27
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . PROGRAM ID PUNT_COMA vars function MAIN block
+
+    PROGRAM         shift and go to state 2
+
+    program                        shift and go to state 1
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> PROGRAM . ID PUNT_COMA vars function MAIN block
+
+    ID              shift and go to state 3
+
+
+state 3
+
+    (1) program -> PROGRAM ID . PUNT_COMA vars function MAIN block
+
+    PUNT_COMA       shift and go to state 4
+
+
+state 4
+
+    (1) program -> PROGRAM ID PUNT_COMA . vars function MAIN block
+    (2) vars -> . VARS var_list
+    (3) vars -> . empty
+    (12) empty -> .
+
+    VARS            shift and go to state 6
+    FUNCTION        reduce using rule 12 (empty -> .)
+
+    vars                           shift and go to state 5
+    empty                          shift and go to state 7
+
+state 5
+
+    (1) program -> PROGRAM ID PUNT_COMA vars . function MAIN block
+    (13) function -> . FUNCTION type ID LEFTPAREN param_list RIGHTPAREN vars block
+
+    FUNCTION        shift and go to state 9
+
+    function                       shift and go to state 8
+
+state 6
+
+    (2) vars -> VARS . var_list
+    (4) var_list -> . var_list COMA var
+    (5) var_list -> . var PUNT_COMA
+    (6) var -> . type ID
+    (7) var -> . type LEFTSQUARE NUMBER RIGHTSQUARE ID
+    (8) type -> . INT
+    (9) type -> . FLOT
+    (10) type -> . CHAR
+    (11) type -> . VOID
+
+    INT             shift and go to state 13
+    FLOT            shift and go to state 14
+    CHAR            shift and go to state 15
+    VOID            shift and go to state 16
+
+    var_list                       shift and go to state 10
+    var                            shift and go to state 11
+    type                           shift and go to state 12
+
+state 7
+
+    (3) vars -> empty .
+
+    FUNCTION        reduce using rule 3 (vars -> empty .)
+    RIGHTCURLY      reduce using rule 3 (vars -> empty .)
+    ID              reduce using rule 3 (vars -> empty .)
+    RETURN          reduce using rule 3 (vars -> empty .)
+    READ            reduce using rule 3 (vars -> empty .)
+    WRITE           reduce using rule 3 (vars -> empty .)
+    IF              reduce using rule 3 (vars -> empty .)
+    FOR             reduce using rule 3 (vars -> empty .)
+    WHILE           reduce using rule 3 (vars -> empty .)
+    VARS            reduce using rule 3 (vars -> empty .)
+    LEFTCURLY       reduce using rule 3 (vars -> empty .)
+
+
+state 8
+
+    (1) program -> PROGRAM ID PUNT_COMA vars function . MAIN block
+
+    MAIN            shift and go to state 17
+
+
+state 9
+
+    (13) function -> FUNCTION . type ID LEFTPAREN param_list RIGHTPAREN vars block
+    (8) type -> . INT
+    (9) type -> . FLOT
+    (10) type -> . CHAR
+    (11) type -> . VOID
+
+    INT             shift and go to state 13
+    FLOT            shift and go to state 14
+    CHAR            shift and go to state 15
+    VOID            shift and go to state 16
+
+    type                           shift and go to state 18
+
+state 10
+
+    (2) vars -> VARS var_list .
+    (4) var_list -> var_list . COMA var
+
+    FUNCTION        reduce using rule 2 (vars -> VARS var_list .)
+    RIGHTCURLY      reduce using rule 2 (vars -> VARS var_list .)
+    ID              reduce using rule 2 (vars -> VARS var_list .)
+    RETURN          reduce using rule 2 (vars -> VARS var_list .)
+    READ            reduce using rule 2 (vars -> VARS var_list .)
+    WRITE           reduce using rule 2 (vars -> VARS var_list .)
+    IF              reduce using rule 2 (vars -> VARS var_list .)
+    FOR             reduce using rule 2 (vars -> VARS var_list .)
+    WHILE           reduce using rule 2 (vars -> VARS var_list .)
+    VARS            reduce using rule 2 (vars -> VARS var_list .)
+    LEFTCURLY       reduce using rule 2 (vars -> VARS var_list .)
+    COMA            shift and go to state 19
+
+
+state 11
+
+    (5) var_list -> var . PUNT_COMA
+
+    PUNT_COMA       shift and go to state 20
+
+
+state 12
+
+    (6) var -> type . ID
+    (7) var -> type . LEFTSQUARE NUMBER RIGHTSQUARE ID
+
+    ID              shift and go to state 21
+    LEFTSQUARE      shift and go to state 22
+
+
+state 13
+
+    (8) type -> INT .
+
+    ID              reduce using rule 8 (type -> INT .)
+    LEFTSQUARE      reduce using rule 8 (type -> INT .)
+
+
+state 14
+
+    (9) type -> FLOT .
+
+    ID              reduce using rule 9 (type -> FLOT .)
+    LEFTSQUARE      reduce using rule 9 (type -> FLOT .)
+
+
+state 15
+
+    (10) type -> CHAR .
+
+    ID              reduce using rule 10 (type -> CHAR .)
+    LEFTSQUARE      reduce using rule 10 (type -> CHAR .)
+
+
+state 16
+
+    (11) type -> VOID .
+
+    ID              reduce using rule 11 (type -> VOID .)
+    LEFTSQUARE      reduce using rule 11 (type -> VOID .)
+
+
+state 17
+
+    (1) program -> PROGRAM ID PUNT_COMA vars function MAIN . block
+    (20) block -> . LEFTCURLY statement_list RIGHTCURLY
+
+    LEFTCURLY       shift and go to state 24
+
+    block                          shift and go to state 23
+
+state 18
+
+    (13) function -> FUNCTION type . ID LEFTPAREN param_list RIGHTPAREN vars block
+
+    ID              shift and go to state 25
+
+
+state 19
+
+    (4) var_list -> var_list COMA . var
+    (6) var -> . type ID
+    (7) var -> . type LEFTSQUARE NUMBER RIGHTSQUARE ID
+    (8) type -> . INT
+    (9) type -> . FLOT
+    (10) type -> . CHAR
+    (11) type -> . VOID
+
+    INT             shift and go to state 13
+    FLOT            shift and go to state 14
+    CHAR            shift and go to state 15
+    VOID            shift and go to state 16
+
+    var                            shift and go to state 26
+    type                           shift and go to state 12
+
+state 20
+
+    (5) var_list -> var PUNT_COMA .
+
+    COMA            reduce using rule 5 (var_list -> var PUNT_COMA .)
+    FUNCTION        reduce using rule 5 (var_list -> var PUNT_COMA .)
+    RIGHTCURLY      reduce using rule 5 (var_list -> var PUNT_COMA .)
+    ID              reduce using rule 5 (var_list -> var PUNT_COMA .)
+    RETURN          reduce using rule 5 (var_list -> var PUNT_COMA .)
+    READ            reduce using rule 5 (var_list -> var PUNT_COMA .)
+    WRITE           reduce using rule 5 (var_list -> var PUNT_COMA .)
+    IF              reduce using rule 5 (var_list -> var PUNT_COMA .)
+    FOR             reduce using rule 5 (var_list -> var PUNT_COMA .)
+    WHILE           reduce using rule 5 (var_list -> var PUNT_COMA .)
+    VARS            reduce using rule 5 (var_list -> var PUNT_COMA .)
+    LEFTCURLY       reduce using rule 5 (var_list -> var PUNT_COMA .)
+
+
+state 21
+
+    (6) var -> type ID .
+
+    PUNT_COMA       reduce using rule 6 (var -> type ID .)
+    COMA            reduce using rule 6 (var -> type ID .)
+    FUNCTION        reduce using rule 6 (var -> type ID .)
+    RIGHTCURLY      reduce using rule 6 (var -> type ID .)
+    ID              reduce using rule 6 (var -> type ID .)
+    RETURN          reduce using rule 6 (var -> type ID .)
+    READ            reduce using rule 6 (var -> type ID .)
+    WRITE           reduce using rule 6 (var -> type ID .)
+    IF              reduce using rule 6 (var -> type ID .)
+    FOR             reduce using rule 6 (var -> type ID .)
+    WHILE           reduce using rule 6 (var -> type ID .)
+    VARS            reduce using rule 6 (var -> type ID .)
+    LEFTCURLY       reduce using rule 6 (var -> type ID .)
+
+
+state 22
+
+    (7) var -> type LEFTSQUARE . NUMBER RIGHTSQUARE ID
+
+    NUMBER          shift and go to state 27
+
+
+state 23
+
+    (1) program -> PROGRAM ID PUNT_COMA vars function MAIN block .
+
+    $end            reduce using rule 1 (program -> PROGRAM ID PUNT_COMA vars function MAIN block .)
+
+
+state 24
+
+    (20) block -> LEFTCURLY . statement_list RIGHTCURLY
+    (21) statement_list -> . statement_list statement
+    (22) statement_list -> . statement
+    (23) statement -> . assignment
+    (24) statement -> . function_call
+    (25) statement -> . return_statement
+    (26) statement -> . read_statement
+    (27) statement -> . write_statement
+    (28) statement -> . decision_statement
+    (29) statement -> . repetition_statement
+    (30) statement -> . vars
+    (31) assignment -> . ID EQUALS expr PUNT_COMA
+    (32) assignment -> . ID LEFTSQUARE expr RIGHTSQUARE EQUALS expr PUNT_COMA
+    (33) function_call -> . ID LEFTPAREN arg_list RIGHTPAREN PUNT_COMA
+    (34) function_call -> . ID LEFTPAREN RIGHTPAREN PUNT_COMA
+    (37) return_statement -> . RETURN expr PUNT_COMA
+    (38) return_statement -> . RETURN PUNT_COMA
+    (39) read_statement -> . READ LEFTPAREN ID RIGHTPAREN PUNT_COMA
+    (40) write_statement -> . WRITE LEFTPAREN expr RIGHTPAREN PUNT_COMA
+    (41) write_statement -> . WRITE LEFTPAREN RIGHTPAREN PUNT_COMA
+    (42) decision_statement -> . IF LEFTPAREN expr RIGHTPAREN THEN block
+    (43) decision_statement -> . IF LEFTPAREN expr RIGHTPAREN THEN block ELSE block
+    (44) repetition_statement -> . FOR ID EQUALS expr TO expr DO block
+    (45) repetition_statement -> . WHILE LEFTPAREN expr RIGHTPAREN DO block
+    (2) vars -> . VARS var_list
+    (3) vars -> . empty
+    (12) empty -> .
+
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for RETURN resolved as shift
+  ! shift/reduce conflict for READ resolved as shift
+  ! shift/reduce conflict for WRITE resolved as shift
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for FOR resolved as shift
+  ! shift/reduce conflict for WHILE resolved as shift
+  ! shift/reduce conflict for VARS resolved as shift
+    ID              shift and go to state 38
+    RETURN          shift and go to state 39
+    READ            shift and go to state 40
+    WRITE           shift and go to state 41
+    IF              shift and go to state 42
+    FOR             shift and go to state 43
+    WHILE           shift and go to state 44
+    VARS            shift and go to state 6
+    RIGHTCURLY      reduce using rule 12 (empty -> .)
+
+  ! ID              [ reduce using rule 12 (empty -> .) ]
+  ! RETURN          [ reduce using rule 12 (empty -> .) ]
+  ! READ            [ reduce using rule 12 (empty -> .) ]
+  ! WRITE           [ reduce using rule 12 (empty -> .) ]
+  ! IF              [ reduce using rule 12 (empty -> .) ]
+  ! FOR             [ reduce using rule 12 (empty -> .) ]
+  ! WHILE           [ reduce using rule 12 (empty -> .) ]
+  ! VARS            [ reduce using rule 12 (empty -> .) ]
+
+    statement_list                 shift and go to state 28
+    statement                      shift and go to state 29
+    assignment                     shift and go to state 30
+    function_call                  shift and go to state 31
+    return_statement               shift and go to state 32
+    read_statement                 shift and go to state 33
+    write_statement                shift and go to state 34
+    decision_statement             shift and go to state 35
+    repetition_statement           shift and go to state 36
+    vars                           shift and go to state 37
+    empty                          shift and go to state 7
+
+state 25
+
+    (13) function -> FUNCTION type ID . LEFTPAREN param_list RIGHTPAREN vars block
+
+    LEFTPAREN       shift and go to state 45
+
+
+state 26
+
+    (4) var_list -> var_list COMA var .
+
+    COMA            reduce using rule 4 (var_list -> var_list COMA var .)
+    FUNCTION        reduce using rule 4 (var_list -> var_list COMA var .)
+    RIGHTCURLY      reduce using rule 4 (var_list -> var_list COMA var .)
+    ID              reduce using rule 4 (var_list -> var_list COMA var .)
+    RETURN          reduce using rule 4 (var_list -> var_list COMA var .)
+    READ            reduce using rule 4 (var_list -> var_list COMA var .)
+    WRITE           reduce using rule 4 (var_list -> var_list COMA var .)
+    IF              reduce using rule 4 (var_list -> var_list COMA var .)
+    FOR             reduce using rule 4 (var_list -> var_list COMA var .)
+    WHILE           reduce using rule 4 (var_list -> var_list COMA var .)
+    VARS            reduce using rule 4 (var_list -> var_list COMA var .)
+    LEFTCURLY       reduce using rule 4 (var_list -> var_list COMA var .)
+
+
+state 27
+
+    (7) var -> type LEFTSQUARE NUMBER . RIGHTSQUARE ID
+
+    RIGHTSQUARE     shift and go to state 46
+
+
+state 28
+
+    (20) block -> LEFTCURLY statement_list . RIGHTCURLY
+    (21) statement_list -> statement_list . statement
+    (23) statement -> . assignment
+    (24) statement -> . function_call
+    (25) statement -> . return_statement
+    (26) statement -> . read_statement
+    (27) statement -> . write_statement
+    (28) statement -> . decision_statement
+    (29) statement -> . repetition_statement
+    (30) statement -> . vars
+    (31) assignment -> . ID EQUALS expr PUNT_COMA
+    (32) assignment -> . ID LEFTSQUARE expr RIGHTSQUARE EQUALS expr PUNT_COMA
+    (33) function_call -> . ID LEFTPAREN arg_list RIGHTPAREN PUNT_COMA
+    (34) function_call -> . ID LEFTPAREN RIGHTPAREN PUNT_COMA
+    (37) return_statement -> . RETURN expr PUNT_COMA
+    (38) return_statement -> . RETURN PUNT_COMA
+    (39) read_statement -> . READ LEFTPAREN ID RIGHTPAREN PUNT_COMA
+    (40) write_statement -> . WRITE LEFTPAREN expr RIGHTPAREN PUNT_COMA
+    (41) write_statement -> . WRITE LEFTPAREN RIGHTPAREN PUNT_COMA
+    (42) decision_statement -> . IF LEFTPAREN expr RIGHTPAREN THEN block
+    (43) decision_statement -> . IF LEFTPAREN expr RIGHTPAREN THEN block ELSE block
+    (44) repetition_statement -> . FOR ID EQUALS expr TO expr DO block
+    (45) repetition_statement -> . WHILE LEFTPAREN expr RIGHTPAREN DO block
+    (2) vars -> . VARS var_list
+    (3) vars -> . empty
+    (12) empty -> .
+
+  ! shift/reduce conflict for RIGHTCURLY resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for RETURN resolved as shift
+  ! shift/reduce conflict for READ resolved as shift
+  ! shift/reduce conflict for WRITE resolved as shift
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for FOR resolved as shift
+  ! shift/reduce conflict for WHILE resolved as shift
+  ! shift/reduce conflict for VARS resolved as shift
+    RIGHTCURLY      shift and go to state 47
+    ID              shift and go to state 38
+    RETURN          shift and go to state 39
+    READ            shift and go to state 40
+    WRITE           shift and go to state 41
+    IF              shift and go to state 42
+    FOR             shift and go to state 43
+    WHILE           shift and go to state 44
+    VARS            shift and go to state 6
+
+  ! RIGHTCURLY      [ reduce using rule 12 (empty -> .) ]
+  ! ID              [ reduce using rule 12 (empty -> .) ]
+  ! RETURN          [ reduce using rule 12 (empty -> .) ]
+  ! READ            [ reduce using rule 12 (empty -> .) ]
+  ! WRITE           [ reduce using rule 12 (empty -> .) ]
+  ! IF              [ reduce using rule 12 (empty -> .) ]
+  ! FOR             [ reduce using rule 12 (empty -> .) ]
+  ! WHILE           [ reduce using rule 12 (empty -> .) ]
+  ! VARS            [ reduce using rule 12 (empty -> .) ]
+
+    statement                      shift and go to state 48
+    assignment                     shift and go to state 30
+    function_call                  shift and go to state 31
+    return_statement               shift and go to state 32
+    read_statement                 shift and go to state 33
+    write_statement                shift and go to state 34
+    decision_statement             shift and go to state 35
+    repetition_statement           shift and go to state 36
+    vars                           shift and go to state 37
+    empty                          shift and go to state 7
+
+state 29
+
+    (22) statement_list -> statement .
+
+    RIGHTCURLY      reduce using rule 22 (statement_list -> statement .)
+    ID              reduce using rule 22 (statement_list -> statement .)
+    RETURN          reduce using rule 22 (statement_list -> statement .)
+    READ            reduce using rule 22 (statement_list -> statement .)
+    WRITE           reduce using rule 22 (statement_list -> statement .)
+    IF              reduce using rule 22 (statement_list -> statement .)
+    FOR             reduce using rule 22 (statement_list -> statement .)
+    WHILE           reduce using rule 22 (statement_list -> statement .)
+    VARS            reduce using rule 22 (statement_list -> statement .)
+
+
+state 30
+
+    (23) statement -> assignment .
+
+    RIGHTCURLY      reduce using rule 23 (statement -> assignment .)
+    ID              reduce using rule 23 (statement -> assignment .)
+    RETURN          reduce using rule 23 (statement -> assignment .)
+    READ            reduce using rule 23 (statement -> assignment .)
+    WRITE           reduce using rule 23 (statement -> assignment .)
+    IF              reduce using rule 23 (statement -> assignment .)
+    FOR             reduce using rule 23 (statement -> assignment .)
+    WHILE           reduce using rule 23 (statement -> assignment .)
+    VARS            reduce using rule 23 (statement -> assignment .)
+
+
+state 31
+
+    (24) statement -> function_call .
+
+    RIGHTCURLY      reduce using rule 24 (statement -> function_call .)
+    ID              reduce using rule 24 (statement -> function_call .)
+    RETURN          reduce using rule 24 (statement -> function_call .)
+    READ            reduce using rule 24 (statement -> function_call .)
+    WRITE           reduce using rule 24 (statement -> function_call .)
+    IF              reduce using rule 24 (statement -> function_call .)
+    FOR             reduce using rule 24 (statement -> function_call .)
+    WHILE           reduce using rule 24 (statement -> function_call .)
+    VARS            reduce using rule 24 (statement -> function_call .)
+
+
+state 32
+
+    (25) statement -> return_statement .
+
+    RIGHTCURLY      reduce using rule 25 (statement -> return_statement .)
+    ID              reduce using rule 25 (statement -> return_statement .)
+    RETURN          reduce using rule 25 (statement -> return_statement .)
+    READ            reduce using rule 25 (statement -> return_statement .)
+    WRITE           reduce using rule 25 (statement -> return_statement .)
+    IF              reduce using rule 25 (statement -> return_statement .)
+    FOR             reduce using rule 25 (statement -> return_statement .)
+    WHILE           reduce using rule 25 (statement -> return_statement .)
+    VARS            reduce using rule 25 (statement -> return_statement .)
+
+
+state 33
+
+    (26) statement -> read_statement .
+
+    RIGHTCURLY      reduce using rule 26 (statement -> read_statement .)
+    ID              reduce using rule 26 (statement -> read_statement .)
+    RETURN          reduce using rule 26 (statement -> read_statement .)
+    READ            reduce using rule 26 (statement -> read_statement .)
+    WRITE           reduce using rule 26 (statement -> read_statement .)
+    IF              reduce using rule 26 (statement -> read_statement .)
+    FOR             reduce using rule 26 (statement -> read_statement .)
+    WHILE           reduce using rule 26 (statement -> read_statement .)
+    VARS            reduce using rule 26 (statement -> read_statement .)
+
+
+state 34
+
+    (27) statement -> write_statement .
+
+    RIGHTCURLY      reduce using rule 27 (statement -> write_statement .)
+    ID              reduce using rule 27 (statement -> write_statement .)
+    RETURN          reduce using rule 27 (statement -> write_statement .)
+    READ            reduce using rule 27 (statement -> write_statement .)
+    WRITE           reduce using rule 27 (statement -> write_statement .)
+    IF              reduce using rule 27 (statement -> write_statement .)
+    FOR             reduce using rule 27 (statement -> write_statement .)
+    WHILE           reduce using rule 27 (statement -> write_statement .)
+    VARS            reduce using rule 27 (statement -> write_statement .)
+
+
+state 35
+
+    (28) statement -> decision_statement .
+
+    RIGHTCURLY      reduce using rule 28 (statement -> decision_statement .)
+    ID              reduce using rule 28 (statement -> decision_statement .)
+    RETURN          reduce using rule 28 (statement -> decision_statement .)
+    READ            reduce using rule 28 (statement -> decision_statement .)
+    WRITE           reduce using rule 28 (statement -> decision_statement .)
+    IF              reduce using rule 28 (statement -> decision_statement .)
+    FOR             reduce using rule 28 (statement -> decision_statement .)
+    WHILE           reduce using rule 28 (statement -> decision_statement .)
+    VARS            reduce using rule 28 (statement -> decision_statement .)
+
+
+state 36
+
+    (29) statement -> repetition_statement .
+
+    RIGHTCURLY      reduce using rule 29 (statement -> repetition_statement .)
+    ID              reduce using rule 29 (statement -> repetition_statement .)
+    RETURN          reduce using rule 29 (statement -> repetition_statement .)
+    READ            reduce using rule 29 (statement -> repetition_statement .)
+    WRITE           reduce using rule 29 (statement -> repetition_statement .)
+    IF              reduce using rule 29 (statement -> repetition_statement .)
+    FOR             reduce using rule 29 (statement -> repetition_statement .)
+    WHILE           reduce using rule 29 (statement -> repetition_statement .)
+    VARS            reduce using rule 29 (statement -> repetition_statement .)
+
+
+state 37
+
+    (30) statement -> vars .
+
+    RIGHTCURLY      reduce using rule 30 (statement -> vars .)
+    ID              reduce using rule 30 (statement -> vars .)
+    RETURN          reduce using rule 30 (statement -> vars .)
+    READ            reduce using rule 30 (statement -> vars .)
+    WRITE           reduce using rule 30 (statement -> vars .)
+    IF              reduce using rule 30 (statement -> vars .)
+    FOR             reduce using rule 30 (statement -> vars .)
+    WHILE           reduce using rule 30 (statement -> vars .)
+    VARS            reduce using rule 30 (statement -> vars .)
+
+
+state 38
+
+    (31) assignment -> ID . EQUALS expr PUNT_COMA
+    (32) assignment -> ID . LEFTSQUARE expr RIGHTSQUARE EQUALS expr PUNT_COMA
+    (33) function_call -> ID . LEFTPAREN arg_list RIGHTPAREN PUNT_COMA
+    (34) function_call -> ID . LEFTPAREN RIGHTPAREN PUNT_COMA
+
+    EQUALS          shift and go to state 49
+    LEFTSQUARE      shift and go to state 50
+    LEFTPAREN       shift and go to state 51
+
+
+state 39
+
+    (37) return_statement -> RETURN . expr PUNT_COMA
+    (38) return_statement -> RETURN . PUNT_COMA
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    PUNT_COMA       shift and go to state 53
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 52
+
+state 40
+
+    (39) read_statement -> READ . LEFTPAREN ID RIGHTPAREN PUNT_COMA
+
+    LEFTPAREN       shift and go to state 58
+
+
+state 41
+
+    (40) write_statement -> WRITE . LEFTPAREN expr RIGHTPAREN PUNT_COMA
+    (41) write_statement -> WRITE . LEFTPAREN RIGHTPAREN PUNT_COMA
+
+    LEFTPAREN       shift and go to state 59
+
+
+state 42
+
+    (42) decision_statement -> IF . LEFTPAREN expr RIGHTPAREN THEN block
+    (43) decision_statement -> IF . LEFTPAREN expr RIGHTPAREN THEN block ELSE block
+
+    LEFTPAREN       shift and go to state 60
+
+
+state 43
+
+    (44) repetition_statement -> FOR . ID EQUALS expr TO expr DO block
+
+    ID              shift and go to state 61
+
+
+state 44
+
+    (45) repetition_statement -> WHILE . LEFTPAREN expr RIGHTPAREN DO block
+
+    LEFTPAREN       shift and go to state 62
+
+
+state 45
+
+    (13) function -> FUNCTION type ID LEFTPAREN . param_list RIGHTPAREN vars block
+    (14) param_list -> . param_list COMA param
+    (15) param_list -> . param
+    (16) param_list -> . empty
+    (17) param -> . INT ID
+    (18) param -> . FLOT ID
+    (19) param -> . CHAR ID
+    (12) empty -> .
+
+    INT             shift and go to state 66
+    FLOT            shift and go to state 67
+    CHAR            shift and go to state 68
+    RIGHTPAREN      reduce using rule 12 (empty -> .)
+    COMA            reduce using rule 12 (empty -> .)
+
+    param_list                     shift and go to state 63
+    param                          shift and go to state 64
+    empty                          shift and go to state 65
+
+state 46
+
+    (7) var -> type LEFTSQUARE NUMBER RIGHTSQUARE . ID
+
+    ID              shift and go to state 69
+
+
+state 47
+
+    (20) block -> LEFTCURLY statement_list RIGHTCURLY .
+
+    $end            reduce using rule 20 (block -> LEFTCURLY statement_list RIGHTCURLY .)
+    MAIN            reduce using rule 20 (block -> LEFTCURLY statement_list RIGHTCURLY .)
+    ELSE            reduce using rule 20 (block -> LEFTCURLY statement_list RIGHTCURLY .)
+    RIGHTCURLY      reduce using rule 20 (block -> LEFTCURLY statement_list RIGHTCURLY .)
+    ID              reduce using rule 20 (block -> LEFTCURLY statement_list RIGHTCURLY .)
+    RETURN          reduce using rule 20 (block -> LEFTCURLY statement_list RIGHTCURLY .)
+    READ            reduce using rule 20 (block -> LEFTCURLY statement_list RIGHTCURLY .)
+    WRITE           reduce using rule 20 (block -> LEFTCURLY statement_list RIGHTCURLY .)
+    IF              reduce using rule 20 (block -> LEFTCURLY statement_list RIGHTCURLY .)
+    FOR             reduce using rule 20 (block -> LEFTCURLY statement_list RIGHTCURLY .)
+    WHILE           reduce using rule 20 (block -> LEFTCURLY statement_list RIGHTCURLY .)
+    VARS            reduce using rule 20 (block -> LEFTCURLY statement_list RIGHTCURLY .)
+
+
+state 48
+
+    (21) statement_list -> statement_list statement .
+
+    RIGHTCURLY      reduce using rule 21 (statement_list -> statement_list statement .)
+    ID              reduce using rule 21 (statement_list -> statement_list statement .)
+    RETURN          reduce using rule 21 (statement_list -> statement_list statement .)
+    READ            reduce using rule 21 (statement_list -> statement_list statement .)
+    WRITE           reduce using rule 21 (statement_list -> statement_list statement .)
+    IF              reduce using rule 21 (statement_list -> statement_list statement .)
+    FOR             reduce using rule 21 (statement_list -> statement_list statement .)
+    WHILE           reduce using rule 21 (statement_list -> statement_list statement .)
+    VARS            reduce using rule 21 (statement_list -> statement_list statement .)
+
+
+state 49
+
+    (31) assignment -> ID EQUALS . expr PUNT_COMA
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 70
+
+state 50
+
+    (32) assignment -> ID LEFTSQUARE . expr RIGHTSQUARE EQUALS expr PUNT_COMA
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 71
+
+state 51
+
+    (33) function_call -> ID LEFTPAREN . arg_list RIGHTPAREN PUNT_COMA
+    (34) function_call -> ID LEFTPAREN . RIGHTPAREN PUNT_COMA
+    (35) arg_list -> . arg_list COMA expr
+    (36) arg_list -> . expr
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    RIGHTPAREN      shift and go to state 73
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    arg_list                       shift and go to state 72
+    expr                           shift and go to state 74
+
+state 52
+
+    (37) return_statement -> RETURN expr . PUNT_COMA
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    PUNT_COMA       shift and go to state 75
+    PLUS            shift and go to state 76
+    MINUS           shift and go to state 77
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+    AND             shift and go to state 80
+    OR              shift and go to state 81
+    LESS_THAN       shift and go to state 82
+    MORE_THAN       shift and go to state 83
+    EQUAL_TO        shift and go to state 84
+
+
+state 53
+
+    (38) return_statement -> RETURN PUNT_COMA .
+
+    RIGHTCURLY      reduce using rule 38 (return_statement -> RETURN PUNT_COMA .)
+    ID              reduce using rule 38 (return_statement -> RETURN PUNT_COMA .)
+    RETURN          reduce using rule 38 (return_statement -> RETURN PUNT_COMA .)
+    READ            reduce using rule 38 (return_statement -> RETURN PUNT_COMA .)
+    WRITE           reduce using rule 38 (return_statement -> RETURN PUNT_COMA .)
+    IF              reduce using rule 38 (return_statement -> RETURN PUNT_COMA .)
+    FOR             reduce using rule 38 (return_statement -> RETURN PUNT_COMA .)
+    WHILE           reduce using rule 38 (return_statement -> RETURN PUNT_COMA .)
+    VARS            reduce using rule 38 (return_statement -> RETURN PUNT_COMA .)
+
+
+state 54
+
+    (56) expr -> MINUS . expr
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 85
+
+state 55
+
+    (55) expr -> LEFTPAREN . expr RIGHTPAREN
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 86
+
+state 56
+
+    (57) expr -> NUMBER .
+
+    PUNT_COMA       reduce using rule 57 (expr -> NUMBER .)
+    PLUS            reduce using rule 57 (expr -> NUMBER .)
+    MINUS           reduce using rule 57 (expr -> NUMBER .)
+    MULT            reduce using rule 57 (expr -> NUMBER .)
+    DIV             reduce using rule 57 (expr -> NUMBER .)
+    AND             reduce using rule 57 (expr -> NUMBER .)
+    OR              reduce using rule 57 (expr -> NUMBER .)
+    LESS_THAN       reduce using rule 57 (expr -> NUMBER .)
+    MORE_THAN       reduce using rule 57 (expr -> NUMBER .)
+    EQUAL_TO        reduce using rule 57 (expr -> NUMBER .)
+    RIGHTSQUARE     reduce using rule 57 (expr -> NUMBER .)
+    RIGHTPAREN      reduce using rule 57 (expr -> NUMBER .)
+    COMA            reduce using rule 57 (expr -> NUMBER .)
+    TO              reduce using rule 57 (expr -> NUMBER .)
+    DO              reduce using rule 57 (expr -> NUMBER .)
+
+
+state 57
+
+    (58) expr -> ID .
+
+    PUNT_COMA       reduce using rule 58 (expr -> ID .)
+    PLUS            reduce using rule 58 (expr -> ID .)
+    MINUS           reduce using rule 58 (expr -> ID .)
+    MULT            reduce using rule 58 (expr -> ID .)
+    DIV             reduce using rule 58 (expr -> ID .)
+    AND             reduce using rule 58 (expr -> ID .)
+    OR              reduce using rule 58 (expr -> ID .)
+    LESS_THAN       reduce using rule 58 (expr -> ID .)
+    MORE_THAN       reduce using rule 58 (expr -> ID .)
+    EQUAL_TO        reduce using rule 58 (expr -> ID .)
+    RIGHTSQUARE     reduce using rule 58 (expr -> ID .)
+    RIGHTPAREN      reduce using rule 58 (expr -> ID .)
+    COMA            reduce using rule 58 (expr -> ID .)
+    TO              reduce using rule 58 (expr -> ID .)
+    DO              reduce using rule 58 (expr -> ID .)
+
+
+state 58
+
+    (39) read_statement -> READ LEFTPAREN . ID RIGHTPAREN PUNT_COMA
+
+    ID              shift and go to state 87
+
+
+state 59
+
+    (40) write_statement -> WRITE LEFTPAREN . expr RIGHTPAREN PUNT_COMA
+    (41) write_statement -> WRITE LEFTPAREN . RIGHTPAREN PUNT_COMA
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    RIGHTPAREN      shift and go to state 89
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 88
+
+state 60
+
+    (42) decision_statement -> IF LEFTPAREN . expr RIGHTPAREN THEN block
+    (43) decision_statement -> IF LEFTPAREN . expr RIGHTPAREN THEN block ELSE block
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 90
+
+state 61
+
+    (44) repetition_statement -> FOR ID . EQUALS expr TO expr DO block
+
+    EQUALS          shift and go to state 91
+
+
+state 62
+
+    (45) repetition_statement -> WHILE LEFTPAREN . expr RIGHTPAREN DO block
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 92
+
+state 63
+
+    (13) function -> FUNCTION type ID LEFTPAREN param_list . RIGHTPAREN vars block
+    (14) param_list -> param_list . COMA param
+
+    RIGHTPAREN      shift and go to state 93
+    COMA            shift and go to state 94
+
+
+state 64
+
+    (15) param_list -> param .
+
+    RIGHTPAREN      reduce using rule 15 (param_list -> param .)
+    COMA            reduce using rule 15 (param_list -> param .)
+
+
+state 65
+
+    (16) param_list -> empty .
+
+    RIGHTPAREN      reduce using rule 16 (param_list -> empty .)
+    COMA            reduce using rule 16 (param_list -> empty .)
+
+
+state 66
+
+    (17) param -> INT . ID
+
+    ID              shift and go to state 95
+
+
+state 67
+
+    (18) param -> FLOT . ID
+
+    ID              shift and go to state 96
+
+
+state 68
+
+    (19) param -> CHAR . ID
+
+    ID              shift and go to state 97
+
+
+state 69
+
+    (7) var -> type LEFTSQUARE NUMBER RIGHTSQUARE ID .
+
+    PUNT_COMA       reduce using rule 7 (var -> type LEFTSQUARE NUMBER RIGHTSQUARE ID .)
+    COMA            reduce using rule 7 (var -> type LEFTSQUARE NUMBER RIGHTSQUARE ID .)
+    FUNCTION        reduce using rule 7 (var -> type LEFTSQUARE NUMBER RIGHTSQUARE ID .)
+    RIGHTCURLY      reduce using rule 7 (var -> type LEFTSQUARE NUMBER RIGHTSQUARE ID .)
+    ID              reduce using rule 7 (var -> type LEFTSQUARE NUMBER RIGHTSQUARE ID .)
+    RETURN          reduce using rule 7 (var -> type LEFTSQUARE NUMBER RIGHTSQUARE ID .)
+    READ            reduce using rule 7 (var -> type LEFTSQUARE NUMBER RIGHTSQUARE ID .)
+    WRITE           reduce using rule 7 (var -> type LEFTSQUARE NUMBER RIGHTSQUARE ID .)
+    IF              reduce using rule 7 (var -> type LEFTSQUARE NUMBER RIGHTSQUARE ID .)
+    FOR             reduce using rule 7 (var -> type LEFTSQUARE NUMBER RIGHTSQUARE ID .)
+    WHILE           reduce using rule 7 (var -> type LEFTSQUARE NUMBER RIGHTSQUARE ID .)
+    VARS            reduce using rule 7 (var -> type LEFTSQUARE NUMBER RIGHTSQUARE ID .)
+    LEFTCURLY       reduce using rule 7 (var -> type LEFTSQUARE NUMBER RIGHTSQUARE ID .)
+
+
+state 70
+
+    (31) assignment -> ID EQUALS expr . PUNT_COMA
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    PUNT_COMA       shift and go to state 98
+    PLUS            shift and go to state 76
+    MINUS           shift and go to state 77
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+    AND             shift and go to state 80
+    OR              shift and go to state 81
+    LESS_THAN       shift and go to state 82
+    MORE_THAN       shift and go to state 83
+    EQUAL_TO        shift and go to state 84
+
+
+state 71
+
+    (32) assignment -> ID LEFTSQUARE expr . RIGHTSQUARE EQUALS expr PUNT_COMA
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    RIGHTSQUARE     shift and go to state 99
+    PLUS            shift and go to state 76
+    MINUS           shift and go to state 77
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+    AND             shift and go to state 80
+    OR              shift and go to state 81
+    LESS_THAN       shift and go to state 82
+    MORE_THAN       shift and go to state 83
+    EQUAL_TO        shift and go to state 84
+
+
+state 72
+
+    (33) function_call -> ID LEFTPAREN arg_list . RIGHTPAREN PUNT_COMA
+    (35) arg_list -> arg_list . COMA expr
+
+    RIGHTPAREN      shift and go to state 100
+    COMA            shift and go to state 101
+
+
+state 73
+
+    (34) function_call -> ID LEFTPAREN RIGHTPAREN . PUNT_COMA
+
+    PUNT_COMA       shift and go to state 102
+
+
+state 74
+
+    (36) arg_list -> expr .
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    RIGHTPAREN      reduce using rule 36 (arg_list -> expr .)
+    COMA            reduce using rule 36 (arg_list -> expr .)
+    PLUS            shift and go to state 76
+    MINUS           shift and go to state 77
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+    AND             shift and go to state 80
+    OR              shift and go to state 81
+    LESS_THAN       shift and go to state 82
+    MORE_THAN       shift and go to state 83
+    EQUAL_TO        shift and go to state 84
+
+
+state 75
+
+    (37) return_statement -> RETURN expr PUNT_COMA .
+
+    RIGHTCURLY      reduce using rule 37 (return_statement -> RETURN expr PUNT_COMA .)
+    ID              reduce using rule 37 (return_statement -> RETURN expr PUNT_COMA .)
+    RETURN          reduce using rule 37 (return_statement -> RETURN expr PUNT_COMA .)
+    READ            reduce using rule 37 (return_statement -> RETURN expr PUNT_COMA .)
+    WRITE           reduce using rule 37 (return_statement -> RETURN expr PUNT_COMA .)
+    IF              reduce using rule 37 (return_statement -> RETURN expr PUNT_COMA .)
+    FOR             reduce using rule 37 (return_statement -> RETURN expr PUNT_COMA .)
+    WHILE           reduce using rule 37 (return_statement -> RETURN expr PUNT_COMA .)
+    VARS            reduce using rule 37 (return_statement -> RETURN expr PUNT_COMA .)
+
+
+state 76
+
+    (46) expr -> expr PLUS . expr
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 103
+
+state 77
+
+    (47) expr -> expr MINUS . expr
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 104
+
+state 78
+
+    (48) expr -> expr MULT . expr
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 105
+
+state 79
+
+    (49) expr -> expr DIV . expr
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 106
+
+state 80
+
+    (50) expr -> expr AND . expr
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 107
+
+state 81
+
+    (51) expr -> expr OR . expr
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 108
+
+state 82
+
+    (52) expr -> expr LESS_THAN . expr
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 109
+
+state 83
+
+    (53) expr -> expr MORE_THAN . expr
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 110
+
+state 84
+
+    (54) expr -> expr EQUAL_TO . expr
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 111
+
+state 85
+
+    (56) expr -> MINUS expr .
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    PUNT_COMA       reduce using rule 56 (expr -> MINUS expr .)
+    PLUS            reduce using rule 56 (expr -> MINUS expr .)
+    MINUS           reduce using rule 56 (expr -> MINUS expr .)
+    MULT            reduce using rule 56 (expr -> MINUS expr .)
+    DIV             reduce using rule 56 (expr -> MINUS expr .)
+    AND             reduce using rule 56 (expr -> MINUS expr .)
+    OR              reduce using rule 56 (expr -> MINUS expr .)
+    LESS_THAN       reduce using rule 56 (expr -> MINUS expr .)
+    MORE_THAN       reduce using rule 56 (expr -> MINUS expr .)
+    EQUAL_TO        reduce using rule 56 (expr -> MINUS expr .)
+    RIGHTSQUARE     reduce using rule 56 (expr -> MINUS expr .)
+    RIGHTPAREN      reduce using rule 56 (expr -> MINUS expr .)
+    COMA            reduce using rule 56 (expr -> MINUS expr .)
+    TO              reduce using rule 56 (expr -> MINUS expr .)
+    DO              reduce using rule 56 (expr -> MINUS expr .)
+
+  ! PLUS            [ shift and go to state 76 ]
+  ! MINUS           [ shift and go to state 77 ]
+  ! MULT            [ shift and go to state 78 ]
+  ! DIV             [ shift and go to state 79 ]
+  ! AND             [ shift and go to state 80 ]
+  ! OR              [ shift and go to state 81 ]
+  ! LESS_THAN       [ shift and go to state 82 ]
+  ! MORE_THAN       [ shift and go to state 83 ]
+  ! EQUAL_TO        [ shift and go to state 84 ]
+
+
+state 86
+
+    (55) expr -> LEFTPAREN expr . RIGHTPAREN
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    RIGHTPAREN      shift and go to state 112
+    PLUS            shift and go to state 76
+    MINUS           shift and go to state 77
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+    AND             shift and go to state 80
+    OR              shift and go to state 81
+    LESS_THAN       shift and go to state 82
+    MORE_THAN       shift and go to state 83
+    EQUAL_TO        shift and go to state 84
+
+
+state 87
+
+    (39) read_statement -> READ LEFTPAREN ID . RIGHTPAREN PUNT_COMA
+
+    RIGHTPAREN      shift and go to state 113
+
+
+state 88
+
+    (40) write_statement -> WRITE LEFTPAREN expr . RIGHTPAREN PUNT_COMA
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    RIGHTPAREN      shift and go to state 114
+    PLUS            shift and go to state 76
+    MINUS           shift and go to state 77
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+    AND             shift and go to state 80
+    OR              shift and go to state 81
+    LESS_THAN       shift and go to state 82
+    MORE_THAN       shift and go to state 83
+    EQUAL_TO        shift and go to state 84
+
+
+state 89
+
+    (41) write_statement -> WRITE LEFTPAREN RIGHTPAREN . PUNT_COMA
+
+    PUNT_COMA       shift and go to state 115
+
+
+state 90
+
+    (42) decision_statement -> IF LEFTPAREN expr . RIGHTPAREN THEN block
+    (43) decision_statement -> IF LEFTPAREN expr . RIGHTPAREN THEN block ELSE block
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    RIGHTPAREN      shift and go to state 116
+    PLUS            shift and go to state 76
+    MINUS           shift and go to state 77
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+    AND             shift and go to state 80
+    OR              shift and go to state 81
+    LESS_THAN       shift and go to state 82
+    MORE_THAN       shift and go to state 83
+    EQUAL_TO        shift and go to state 84
+
+
+state 91
+
+    (44) repetition_statement -> FOR ID EQUALS . expr TO expr DO block
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 117
+
+state 92
+
+    (45) repetition_statement -> WHILE LEFTPAREN expr . RIGHTPAREN DO block
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    RIGHTPAREN      shift and go to state 118
+    PLUS            shift and go to state 76
+    MINUS           shift and go to state 77
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+    AND             shift and go to state 80
+    OR              shift and go to state 81
+    LESS_THAN       shift and go to state 82
+    MORE_THAN       shift and go to state 83
+    EQUAL_TO        shift and go to state 84
+
+
+state 93
+
+    (13) function -> FUNCTION type ID LEFTPAREN param_list RIGHTPAREN . vars block
+    (2) vars -> . VARS var_list
+    (3) vars -> . empty
+    (12) empty -> .
+
+    VARS            shift and go to state 6
+    LEFTCURLY       reduce using rule 12 (empty -> .)
+
+    vars                           shift and go to state 119
+    empty                          shift and go to state 7
+
+state 94
+
+    (14) param_list -> param_list COMA . param
+    (17) param -> . INT ID
+    (18) param -> . FLOT ID
+    (19) param -> . CHAR ID
+
+    INT             shift and go to state 66
+    FLOT            shift and go to state 67
+    CHAR            shift and go to state 68
+
+    param                          shift and go to state 120
+
+state 95
+
+    (17) param -> INT ID .
+
+    RIGHTPAREN      reduce using rule 17 (param -> INT ID .)
+    COMA            reduce using rule 17 (param -> INT ID .)
+
+
+state 96
+
+    (18) param -> FLOT ID .
+
+    RIGHTPAREN      reduce using rule 18 (param -> FLOT ID .)
+    COMA            reduce using rule 18 (param -> FLOT ID .)
+
+
+state 97
+
+    (19) param -> CHAR ID .
+
+    RIGHTPAREN      reduce using rule 19 (param -> CHAR ID .)
+    COMA            reduce using rule 19 (param -> CHAR ID .)
+
+
+state 98
+
+    (31) assignment -> ID EQUALS expr PUNT_COMA .
+
+    RIGHTCURLY      reduce using rule 31 (assignment -> ID EQUALS expr PUNT_COMA .)
+    ID              reduce using rule 31 (assignment -> ID EQUALS expr PUNT_COMA .)
+    RETURN          reduce using rule 31 (assignment -> ID EQUALS expr PUNT_COMA .)
+    READ            reduce using rule 31 (assignment -> ID EQUALS expr PUNT_COMA .)
+    WRITE           reduce using rule 31 (assignment -> ID EQUALS expr PUNT_COMA .)
+    IF              reduce using rule 31 (assignment -> ID EQUALS expr PUNT_COMA .)
+    FOR             reduce using rule 31 (assignment -> ID EQUALS expr PUNT_COMA .)
+    WHILE           reduce using rule 31 (assignment -> ID EQUALS expr PUNT_COMA .)
+    VARS            reduce using rule 31 (assignment -> ID EQUALS expr PUNT_COMA .)
+
+
+state 99
+
+    (32) assignment -> ID LEFTSQUARE expr RIGHTSQUARE . EQUALS expr PUNT_COMA
+
+    EQUALS          shift and go to state 121
+
+
+state 100
+
+    (33) function_call -> ID LEFTPAREN arg_list RIGHTPAREN . PUNT_COMA
+
+    PUNT_COMA       shift and go to state 122
+
+
+state 101
+
+    (35) arg_list -> arg_list COMA . expr
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 123
+
+state 102
+
+    (34) function_call -> ID LEFTPAREN RIGHTPAREN PUNT_COMA .
+
+    RIGHTCURLY      reduce using rule 34 (function_call -> ID LEFTPAREN RIGHTPAREN PUNT_COMA .)
+    ID              reduce using rule 34 (function_call -> ID LEFTPAREN RIGHTPAREN PUNT_COMA .)
+    RETURN          reduce using rule 34 (function_call -> ID LEFTPAREN RIGHTPAREN PUNT_COMA .)
+    READ            reduce using rule 34 (function_call -> ID LEFTPAREN RIGHTPAREN PUNT_COMA .)
+    WRITE           reduce using rule 34 (function_call -> ID LEFTPAREN RIGHTPAREN PUNT_COMA .)
+    IF              reduce using rule 34 (function_call -> ID LEFTPAREN RIGHTPAREN PUNT_COMA .)
+    FOR             reduce using rule 34 (function_call -> ID LEFTPAREN RIGHTPAREN PUNT_COMA .)
+    WHILE           reduce using rule 34 (function_call -> ID LEFTPAREN RIGHTPAREN PUNT_COMA .)
+    VARS            reduce using rule 34 (function_call -> ID LEFTPAREN RIGHTPAREN PUNT_COMA .)
+
+
+state 103
+
+    (46) expr -> expr PLUS expr .
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    PUNT_COMA       reduce using rule 46 (expr -> expr PLUS expr .)
+    PLUS            reduce using rule 46 (expr -> expr PLUS expr .)
+    MINUS           reduce using rule 46 (expr -> expr PLUS expr .)
+    AND             reduce using rule 46 (expr -> expr PLUS expr .)
+    OR              reduce using rule 46 (expr -> expr PLUS expr .)
+    LESS_THAN       reduce using rule 46 (expr -> expr PLUS expr .)
+    MORE_THAN       reduce using rule 46 (expr -> expr PLUS expr .)
+    EQUAL_TO        reduce using rule 46 (expr -> expr PLUS expr .)
+    RIGHTSQUARE     reduce using rule 46 (expr -> expr PLUS expr .)
+    RIGHTPAREN      reduce using rule 46 (expr -> expr PLUS expr .)
+    COMA            reduce using rule 46 (expr -> expr PLUS expr .)
+    TO              reduce using rule 46 (expr -> expr PLUS expr .)
+    DO              reduce using rule 46 (expr -> expr PLUS expr .)
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+
+  ! MULT            [ reduce using rule 46 (expr -> expr PLUS expr .) ]
+  ! DIV             [ reduce using rule 46 (expr -> expr PLUS expr .) ]
+  ! PLUS            [ shift and go to state 76 ]
+  ! MINUS           [ shift and go to state 77 ]
+  ! AND             [ shift and go to state 80 ]
+  ! OR              [ shift and go to state 81 ]
+  ! LESS_THAN       [ shift and go to state 82 ]
+  ! MORE_THAN       [ shift and go to state 83 ]
+  ! EQUAL_TO        [ shift and go to state 84 ]
+
+
+state 104
+
+    (47) expr -> expr MINUS expr .
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    PUNT_COMA       reduce using rule 47 (expr -> expr MINUS expr .)
+    PLUS            reduce using rule 47 (expr -> expr MINUS expr .)
+    MINUS           reduce using rule 47 (expr -> expr MINUS expr .)
+    AND             reduce using rule 47 (expr -> expr MINUS expr .)
+    OR              reduce using rule 47 (expr -> expr MINUS expr .)
+    LESS_THAN       reduce using rule 47 (expr -> expr MINUS expr .)
+    MORE_THAN       reduce using rule 47 (expr -> expr MINUS expr .)
+    EQUAL_TO        reduce using rule 47 (expr -> expr MINUS expr .)
+    RIGHTSQUARE     reduce using rule 47 (expr -> expr MINUS expr .)
+    RIGHTPAREN      reduce using rule 47 (expr -> expr MINUS expr .)
+    COMA            reduce using rule 47 (expr -> expr MINUS expr .)
+    TO              reduce using rule 47 (expr -> expr MINUS expr .)
+    DO              reduce using rule 47 (expr -> expr MINUS expr .)
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+
+  ! MULT            [ reduce using rule 47 (expr -> expr MINUS expr .) ]
+  ! DIV             [ reduce using rule 47 (expr -> expr MINUS expr .) ]
+  ! PLUS            [ shift and go to state 76 ]
+  ! MINUS           [ shift and go to state 77 ]
+  ! AND             [ shift and go to state 80 ]
+  ! OR              [ shift and go to state 81 ]
+  ! LESS_THAN       [ shift and go to state 82 ]
+  ! MORE_THAN       [ shift and go to state 83 ]
+  ! EQUAL_TO        [ shift and go to state 84 ]
+
+
+state 105
+
+    (48) expr -> expr MULT expr .
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    PUNT_COMA       reduce using rule 48 (expr -> expr MULT expr .)
+    PLUS            reduce using rule 48 (expr -> expr MULT expr .)
+    MINUS           reduce using rule 48 (expr -> expr MULT expr .)
+    MULT            reduce using rule 48 (expr -> expr MULT expr .)
+    DIV             reduce using rule 48 (expr -> expr MULT expr .)
+    AND             reduce using rule 48 (expr -> expr MULT expr .)
+    OR              reduce using rule 48 (expr -> expr MULT expr .)
+    LESS_THAN       reduce using rule 48 (expr -> expr MULT expr .)
+    MORE_THAN       reduce using rule 48 (expr -> expr MULT expr .)
+    EQUAL_TO        reduce using rule 48 (expr -> expr MULT expr .)
+    RIGHTSQUARE     reduce using rule 48 (expr -> expr MULT expr .)
+    RIGHTPAREN      reduce using rule 48 (expr -> expr MULT expr .)
+    COMA            reduce using rule 48 (expr -> expr MULT expr .)
+    TO              reduce using rule 48 (expr -> expr MULT expr .)
+    DO              reduce using rule 48 (expr -> expr MULT expr .)
+
+  ! PLUS            [ shift and go to state 76 ]
+  ! MINUS           [ shift and go to state 77 ]
+  ! MULT            [ shift and go to state 78 ]
+  ! DIV             [ shift and go to state 79 ]
+  ! AND             [ shift and go to state 80 ]
+  ! OR              [ shift and go to state 81 ]
+  ! LESS_THAN       [ shift and go to state 82 ]
+  ! MORE_THAN       [ shift and go to state 83 ]
+  ! EQUAL_TO        [ shift and go to state 84 ]
+
+
+state 106
+
+    (49) expr -> expr DIV expr .
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    PUNT_COMA       reduce using rule 49 (expr -> expr DIV expr .)
+    PLUS            reduce using rule 49 (expr -> expr DIV expr .)
+    MINUS           reduce using rule 49 (expr -> expr DIV expr .)
+    MULT            reduce using rule 49 (expr -> expr DIV expr .)
+    DIV             reduce using rule 49 (expr -> expr DIV expr .)
+    AND             reduce using rule 49 (expr -> expr DIV expr .)
+    OR              reduce using rule 49 (expr -> expr DIV expr .)
+    LESS_THAN       reduce using rule 49 (expr -> expr DIV expr .)
+    MORE_THAN       reduce using rule 49 (expr -> expr DIV expr .)
+    EQUAL_TO        reduce using rule 49 (expr -> expr DIV expr .)
+    RIGHTSQUARE     reduce using rule 49 (expr -> expr DIV expr .)
+    RIGHTPAREN      reduce using rule 49 (expr -> expr DIV expr .)
+    COMA            reduce using rule 49 (expr -> expr DIV expr .)
+    TO              reduce using rule 49 (expr -> expr DIV expr .)
+    DO              reduce using rule 49 (expr -> expr DIV expr .)
+
+  ! PLUS            [ shift and go to state 76 ]
+  ! MINUS           [ shift and go to state 77 ]
+  ! MULT            [ shift and go to state 78 ]
+  ! DIV             [ shift and go to state 79 ]
+  ! AND             [ shift and go to state 80 ]
+  ! OR              [ shift and go to state 81 ]
+  ! LESS_THAN       [ shift and go to state 82 ]
+  ! MORE_THAN       [ shift and go to state 83 ]
+  ! EQUAL_TO        [ shift and go to state 84 ]
+
+
+state 107
+
+    (50) expr -> expr AND expr .
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    PUNT_COMA       reduce using rule 50 (expr -> expr AND expr .)
+    AND             reduce using rule 50 (expr -> expr AND expr .)
+    OR              reduce using rule 50 (expr -> expr AND expr .)
+    RIGHTSQUARE     reduce using rule 50 (expr -> expr AND expr .)
+    RIGHTPAREN      reduce using rule 50 (expr -> expr AND expr .)
+    COMA            reduce using rule 50 (expr -> expr AND expr .)
+    TO              reduce using rule 50 (expr -> expr AND expr .)
+    DO              reduce using rule 50 (expr -> expr AND expr .)
+    PLUS            shift and go to state 76
+    MINUS           shift and go to state 77
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+    LESS_THAN       shift and go to state 82
+    MORE_THAN       shift and go to state 83
+    EQUAL_TO        shift and go to state 84
+
+  ! PLUS            [ reduce using rule 50 (expr -> expr AND expr .) ]
+  ! MINUS           [ reduce using rule 50 (expr -> expr AND expr .) ]
+  ! MULT            [ reduce using rule 50 (expr -> expr AND expr .) ]
+  ! DIV             [ reduce using rule 50 (expr -> expr AND expr .) ]
+  ! LESS_THAN       [ reduce using rule 50 (expr -> expr AND expr .) ]
+  ! MORE_THAN       [ reduce using rule 50 (expr -> expr AND expr .) ]
+  ! EQUAL_TO        [ reduce using rule 50 (expr -> expr AND expr .) ]
+  ! AND             [ shift and go to state 80 ]
+  ! OR              [ shift and go to state 81 ]
+
+
+state 108
+
+    (51) expr -> expr OR expr .
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    PUNT_COMA       reduce using rule 51 (expr -> expr OR expr .)
+    OR              reduce using rule 51 (expr -> expr OR expr .)
+    RIGHTSQUARE     reduce using rule 51 (expr -> expr OR expr .)
+    RIGHTPAREN      reduce using rule 51 (expr -> expr OR expr .)
+    COMA            reduce using rule 51 (expr -> expr OR expr .)
+    TO              reduce using rule 51 (expr -> expr OR expr .)
+    DO              reduce using rule 51 (expr -> expr OR expr .)
+    PLUS            shift and go to state 76
+    MINUS           shift and go to state 77
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+    AND             shift and go to state 80
+    LESS_THAN       shift and go to state 82
+    MORE_THAN       shift and go to state 83
+    EQUAL_TO        shift and go to state 84
+
+  ! PLUS            [ reduce using rule 51 (expr -> expr OR expr .) ]
+  ! MINUS           [ reduce using rule 51 (expr -> expr OR expr .) ]
+  ! MULT            [ reduce using rule 51 (expr -> expr OR expr .) ]
+  ! DIV             [ reduce using rule 51 (expr -> expr OR expr .) ]
+  ! AND             [ reduce using rule 51 (expr -> expr OR expr .) ]
+  ! LESS_THAN       [ reduce using rule 51 (expr -> expr OR expr .) ]
+  ! MORE_THAN       [ reduce using rule 51 (expr -> expr OR expr .) ]
+  ! EQUAL_TO        [ reduce using rule 51 (expr -> expr OR expr .) ]
+  ! OR              [ shift and go to state 81 ]
+
+
+state 109
+
+    (52) expr -> expr LESS_THAN expr .
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    PUNT_COMA       reduce using rule 52 (expr -> expr LESS_THAN expr .)
+    AND             reduce using rule 52 (expr -> expr LESS_THAN expr .)
+    OR              reduce using rule 52 (expr -> expr LESS_THAN expr .)
+    LESS_THAN       reduce using rule 52 (expr -> expr LESS_THAN expr .)
+    MORE_THAN       reduce using rule 52 (expr -> expr LESS_THAN expr .)
+    EQUAL_TO        reduce using rule 52 (expr -> expr LESS_THAN expr .)
+    RIGHTSQUARE     reduce using rule 52 (expr -> expr LESS_THAN expr .)
+    RIGHTPAREN      reduce using rule 52 (expr -> expr LESS_THAN expr .)
+    COMA            reduce using rule 52 (expr -> expr LESS_THAN expr .)
+    TO              reduce using rule 52 (expr -> expr LESS_THAN expr .)
+    DO              reduce using rule 52 (expr -> expr LESS_THAN expr .)
+    PLUS            shift and go to state 76
+    MINUS           shift and go to state 77
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+
+  ! PLUS            [ reduce using rule 52 (expr -> expr LESS_THAN expr .) ]
+  ! MINUS           [ reduce using rule 52 (expr -> expr LESS_THAN expr .) ]
+  ! MULT            [ reduce using rule 52 (expr -> expr LESS_THAN expr .) ]
+  ! DIV             [ reduce using rule 52 (expr -> expr LESS_THAN expr .) ]
+  ! AND             [ shift and go to state 80 ]
+  ! OR              [ shift and go to state 81 ]
+  ! LESS_THAN       [ shift and go to state 82 ]
+  ! MORE_THAN       [ shift and go to state 83 ]
+  ! EQUAL_TO        [ shift and go to state 84 ]
+
+
+state 110
+
+    (53) expr -> expr MORE_THAN expr .
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    PUNT_COMA       reduce using rule 53 (expr -> expr MORE_THAN expr .)
+    AND             reduce using rule 53 (expr -> expr MORE_THAN expr .)
+    OR              reduce using rule 53 (expr -> expr MORE_THAN expr .)
+    LESS_THAN       reduce using rule 53 (expr -> expr MORE_THAN expr .)
+    MORE_THAN       reduce using rule 53 (expr -> expr MORE_THAN expr .)
+    EQUAL_TO        reduce using rule 53 (expr -> expr MORE_THAN expr .)
+    RIGHTSQUARE     reduce using rule 53 (expr -> expr MORE_THAN expr .)
+    RIGHTPAREN      reduce using rule 53 (expr -> expr MORE_THAN expr .)
+    COMA            reduce using rule 53 (expr -> expr MORE_THAN expr .)
+    TO              reduce using rule 53 (expr -> expr MORE_THAN expr .)
+    DO              reduce using rule 53 (expr -> expr MORE_THAN expr .)
+    PLUS            shift and go to state 76
+    MINUS           shift and go to state 77
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+
+  ! PLUS            [ reduce using rule 53 (expr -> expr MORE_THAN expr .) ]
+  ! MINUS           [ reduce using rule 53 (expr -> expr MORE_THAN expr .) ]
+  ! MULT            [ reduce using rule 53 (expr -> expr MORE_THAN expr .) ]
+  ! DIV             [ reduce using rule 53 (expr -> expr MORE_THAN expr .) ]
+  ! AND             [ shift and go to state 80 ]
+  ! OR              [ shift and go to state 81 ]
+  ! LESS_THAN       [ shift and go to state 82 ]
+  ! MORE_THAN       [ shift and go to state 83 ]
+  ! EQUAL_TO        [ shift and go to state 84 ]
+
+
+state 111
+
+    (54) expr -> expr EQUAL_TO expr .
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    PUNT_COMA       reduce using rule 54 (expr -> expr EQUAL_TO expr .)
+    AND             reduce using rule 54 (expr -> expr EQUAL_TO expr .)
+    OR              reduce using rule 54 (expr -> expr EQUAL_TO expr .)
+    LESS_THAN       reduce using rule 54 (expr -> expr EQUAL_TO expr .)
+    MORE_THAN       reduce using rule 54 (expr -> expr EQUAL_TO expr .)
+    EQUAL_TO        reduce using rule 54 (expr -> expr EQUAL_TO expr .)
+    RIGHTSQUARE     reduce using rule 54 (expr -> expr EQUAL_TO expr .)
+    RIGHTPAREN      reduce using rule 54 (expr -> expr EQUAL_TO expr .)
+    COMA            reduce using rule 54 (expr -> expr EQUAL_TO expr .)
+    TO              reduce using rule 54 (expr -> expr EQUAL_TO expr .)
+    DO              reduce using rule 54 (expr -> expr EQUAL_TO expr .)
+    PLUS            shift and go to state 76
+    MINUS           shift and go to state 77
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+
+  ! PLUS            [ reduce using rule 54 (expr -> expr EQUAL_TO expr .) ]
+  ! MINUS           [ reduce using rule 54 (expr -> expr EQUAL_TO expr .) ]
+  ! MULT            [ reduce using rule 54 (expr -> expr EQUAL_TO expr .) ]
+  ! DIV             [ reduce using rule 54 (expr -> expr EQUAL_TO expr .) ]
+  ! AND             [ shift and go to state 80 ]
+  ! OR              [ shift and go to state 81 ]
+  ! LESS_THAN       [ shift and go to state 82 ]
+  ! MORE_THAN       [ shift and go to state 83 ]
+  ! EQUAL_TO        [ shift and go to state 84 ]
+
+
+state 112
+
+    (55) expr -> LEFTPAREN expr RIGHTPAREN .
+
+    PUNT_COMA       reduce using rule 55 (expr -> LEFTPAREN expr RIGHTPAREN .)
+    PLUS            reduce using rule 55 (expr -> LEFTPAREN expr RIGHTPAREN .)
+    MINUS           reduce using rule 55 (expr -> LEFTPAREN expr RIGHTPAREN .)
+    MULT            reduce using rule 55 (expr -> LEFTPAREN expr RIGHTPAREN .)
+    DIV             reduce using rule 55 (expr -> LEFTPAREN expr RIGHTPAREN .)
+    AND             reduce using rule 55 (expr -> LEFTPAREN expr RIGHTPAREN .)
+    OR              reduce using rule 55 (expr -> LEFTPAREN expr RIGHTPAREN .)
+    LESS_THAN       reduce using rule 55 (expr -> LEFTPAREN expr RIGHTPAREN .)
+    MORE_THAN       reduce using rule 55 (expr -> LEFTPAREN expr RIGHTPAREN .)
+    EQUAL_TO        reduce using rule 55 (expr -> LEFTPAREN expr RIGHTPAREN .)
+    RIGHTSQUARE     reduce using rule 55 (expr -> LEFTPAREN expr RIGHTPAREN .)
+    RIGHTPAREN      reduce using rule 55 (expr -> LEFTPAREN expr RIGHTPAREN .)
+    COMA            reduce using rule 55 (expr -> LEFTPAREN expr RIGHTPAREN .)
+    TO              reduce using rule 55 (expr -> LEFTPAREN expr RIGHTPAREN .)
+    DO              reduce using rule 55 (expr -> LEFTPAREN expr RIGHTPAREN .)
+
+
+state 113
+
+    (39) read_statement -> READ LEFTPAREN ID RIGHTPAREN . PUNT_COMA
+
+    PUNT_COMA       shift and go to state 124
+
+
+state 114
+
+    (40) write_statement -> WRITE LEFTPAREN expr RIGHTPAREN . PUNT_COMA
+
+    PUNT_COMA       shift and go to state 125
+
+
+state 115
+
+    (41) write_statement -> WRITE LEFTPAREN RIGHTPAREN PUNT_COMA .
+
+    RIGHTCURLY      reduce using rule 41 (write_statement -> WRITE LEFTPAREN RIGHTPAREN PUNT_COMA .)
+    ID              reduce using rule 41 (write_statement -> WRITE LEFTPAREN RIGHTPAREN PUNT_COMA .)
+    RETURN          reduce using rule 41 (write_statement -> WRITE LEFTPAREN RIGHTPAREN PUNT_COMA .)
+    READ            reduce using rule 41 (write_statement -> WRITE LEFTPAREN RIGHTPAREN PUNT_COMA .)
+    WRITE           reduce using rule 41 (write_statement -> WRITE LEFTPAREN RIGHTPAREN PUNT_COMA .)
+    IF              reduce using rule 41 (write_statement -> WRITE LEFTPAREN RIGHTPAREN PUNT_COMA .)
+    FOR             reduce using rule 41 (write_statement -> WRITE LEFTPAREN RIGHTPAREN PUNT_COMA .)
+    WHILE           reduce using rule 41 (write_statement -> WRITE LEFTPAREN RIGHTPAREN PUNT_COMA .)
+    VARS            reduce using rule 41 (write_statement -> WRITE LEFTPAREN RIGHTPAREN PUNT_COMA .)
+
+
+state 116
+
+    (42) decision_statement -> IF LEFTPAREN expr RIGHTPAREN . THEN block
+    (43) decision_statement -> IF LEFTPAREN expr RIGHTPAREN . THEN block ELSE block
+
+    THEN            shift and go to state 126
+
+
+state 117
+
+    (44) repetition_statement -> FOR ID EQUALS expr . TO expr DO block
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    TO              shift and go to state 127
+    PLUS            shift and go to state 76
+    MINUS           shift and go to state 77
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+    AND             shift and go to state 80
+    OR              shift and go to state 81
+    LESS_THAN       shift and go to state 82
+    MORE_THAN       shift and go to state 83
+    EQUAL_TO        shift and go to state 84
+
+
+state 118
+
+    (45) repetition_statement -> WHILE LEFTPAREN expr RIGHTPAREN . DO block
+
+    DO              shift and go to state 128
+
+
+state 119
+
+    (13) function -> FUNCTION type ID LEFTPAREN param_list RIGHTPAREN vars . block
+    (20) block -> . LEFTCURLY statement_list RIGHTCURLY
+
+    LEFTCURLY       shift and go to state 24
+
+    block                          shift and go to state 129
+
+state 120
+
+    (14) param_list -> param_list COMA param .
+
+    RIGHTPAREN      reduce using rule 14 (param_list -> param_list COMA param .)
+    COMA            reduce using rule 14 (param_list -> param_list COMA param .)
+
+
+state 121
+
+    (32) assignment -> ID LEFTSQUARE expr RIGHTSQUARE EQUALS . expr PUNT_COMA
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 130
+
+state 122
+
+    (33) function_call -> ID LEFTPAREN arg_list RIGHTPAREN PUNT_COMA .
+
+    RIGHTCURLY      reduce using rule 33 (function_call -> ID LEFTPAREN arg_list RIGHTPAREN PUNT_COMA .)
+    ID              reduce using rule 33 (function_call -> ID LEFTPAREN arg_list RIGHTPAREN PUNT_COMA .)
+    RETURN          reduce using rule 33 (function_call -> ID LEFTPAREN arg_list RIGHTPAREN PUNT_COMA .)
+    READ            reduce using rule 33 (function_call -> ID LEFTPAREN arg_list RIGHTPAREN PUNT_COMA .)
+    WRITE           reduce using rule 33 (function_call -> ID LEFTPAREN arg_list RIGHTPAREN PUNT_COMA .)
+    IF              reduce using rule 33 (function_call -> ID LEFTPAREN arg_list RIGHTPAREN PUNT_COMA .)
+    FOR             reduce using rule 33 (function_call -> ID LEFTPAREN arg_list RIGHTPAREN PUNT_COMA .)
+    WHILE           reduce using rule 33 (function_call -> ID LEFTPAREN arg_list RIGHTPAREN PUNT_COMA .)
+    VARS            reduce using rule 33 (function_call -> ID LEFTPAREN arg_list RIGHTPAREN PUNT_COMA .)
+
+
+state 123
+
+    (35) arg_list -> arg_list COMA expr .
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    RIGHTPAREN      reduce using rule 35 (arg_list -> arg_list COMA expr .)
+    COMA            reduce using rule 35 (arg_list -> arg_list COMA expr .)
+    PLUS            shift and go to state 76
+    MINUS           shift and go to state 77
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+    AND             shift and go to state 80
+    OR              shift and go to state 81
+    LESS_THAN       shift and go to state 82
+    MORE_THAN       shift and go to state 83
+    EQUAL_TO        shift and go to state 84
+
+
+state 124
+
+    (39) read_statement -> READ LEFTPAREN ID RIGHTPAREN PUNT_COMA .
+
+    RIGHTCURLY      reduce using rule 39 (read_statement -> READ LEFTPAREN ID RIGHTPAREN PUNT_COMA .)
+    ID              reduce using rule 39 (read_statement -> READ LEFTPAREN ID RIGHTPAREN PUNT_COMA .)
+    RETURN          reduce using rule 39 (read_statement -> READ LEFTPAREN ID RIGHTPAREN PUNT_COMA .)
+    READ            reduce using rule 39 (read_statement -> READ LEFTPAREN ID RIGHTPAREN PUNT_COMA .)
+    WRITE           reduce using rule 39 (read_statement -> READ LEFTPAREN ID RIGHTPAREN PUNT_COMA .)
+    IF              reduce using rule 39 (read_statement -> READ LEFTPAREN ID RIGHTPAREN PUNT_COMA .)
+    FOR             reduce using rule 39 (read_statement -> READ LEFTPAREN ID RIGHTPAREN PUNT_COMA .)
+    WHILE           reduce using rule 39 (read_statement -> READ LEFTPAREN ID RIGHTPAREN PUNT_COMA .)
+    VARS            reduce using rule 39 (read_statement -> READ LEFTPAREN ID RIGHTPAREN PUNT_COMA .)
+
+
+state 125
+
+    (40) write_statement -> WRITE LEFTPAREN expr RIGHTPAREN PUNT_COMA .
+
+    RIGHTCURLY      reduce using rule 40 (write_statement -> WRITE LEFTPAREN expr RIGHTPAREN PUNT_COMA .)
+    ID              reduce using rule 40 (write_statement -> WRITE LEFTPAREN expr RIGHTPAREN PUNT_COMA .)
+    RETURN          reduce using rule 40 (write_statement -> WRITE LEFTPAREN expr RIGHTPAREN PUNT_COMA .)
+    READ            reduce using rule 40 (write_statement -> WRITE LEFTPAREN expr RIGHTPAREN PUNT_COMA .)
+    WRITE           reduce using rule 40 (write_statement -> WRITE LEFTPAREN expr RIGHTPAREN PUNT_COMA .)
+    IF              reduce using rule 40 (write_statement -> WRITE LEFTPAREN expr RIGHTPAREN PUNT_COMA .)
+    FOR             reduce using rule 40 (write_statement -> WRITE LEFTPAREN expr RIGHTPAREN PUNT_COMA .)
+    WHILE           reduce using rule 40 (write_statement -> WRITE LEFTPAREN expr RIGHTPAREN PUNT_COMA .)
+    VARS            reduce using rule 40 (write_statement -> WRITE LEFTPAREN expr RIGHTPAREN PUNT_COMA .)
+
+
+state 126
+
+    (42) decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN . block
+    (43) decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN . block ELSE block
+    (20) block -> . LEFTCURLY statement_list RIGHTCURLY
+
+    LEFTCURLY       shift and go to state 24
+
+    block                          shift and go to state 131
+
+state 127
+
+    (44) repetition_statement -> FOR ID EQUALS expr TO . expr DO block
+    (46) expr -> . expr PLUS expr
+    (47) expr -> . expr MINUS expr
+    (48) expr -> . expr MULT expr
+    (49) expr -> . expr DIV expr
+    (50) expr -> . expr AND expr
+    (51) expr -> . expr OR expr
+    (52) expr -> . expr LESS_THAN expr
+    (53) expr -> . expr MORE_THAN expr
+    (54) expr -> . expr EQUAL_TO expr
+    (55) expr -> . LEFTPAREN expr RIGHTPAREN
+    (56) expr -> . MINUS expr
+    (57) expr -> . NUMBER
+    (58) expr -> . ID
+
+    LEFTPAREN       shift and go to state 55
+    MINUS           shift and go to state 54
+    NUMBER          shift and go to state 56
+    ID              shift and go to state 57
+
+    expr                           shift and go to state 132
+
+state 128
+
+    (45) repetition_statement -> WHILE LEFTPAREN expr RIGHTPAREN DO . block
+    (20) block -> . LEFTCURLY statement_list RIGHTCURLY
+
+    LEFTCURLY       shift and go to state 24
+
+    block                          shift and go to state 133
+
+state 129
+
+    (13) function -> FUNCTION type ID LEFTPAREN param_list RIGHTPAREN vars block .
+
+    MAIN            reduce using rule 13 (function -> FUNCTION type ID LEFTPAREN param_list RIGHTPAREN vars block .)
+
+
+state 130
+
+    (32) assignment -> ID LEFTSQUARE expr RIGHTSQUARE EQUALS expr . PUNT_COMA
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    PUNT_COMA       shift and go to state 134
+    PLUS            shift and go to state 76
+    MINUS           shift and go to state 77
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+    AND             shift and go to state 80
+    OR              shift and go to state 81
+    LESS_THAN       shift and go to state 82
+    MORE_THAN       shift and go to state 83
+    EQUAL_TO        shift and go to state 84
+
+
+state 131
+
+    (42) decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block .
+    (43) decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block . ELSE block
+
+    RIGHTCURLY      reduce using rule 42 (decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block .)
+    ID              reduce using rule 42 (decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block .)
+    RETURN          reduce using rule 42 (decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block .)
+    READ            reduce using rule 42 (decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block .)
+    WRITE           reduce using rule 42 (decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block .)
+    IF              reduce using rule 42 (decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block .)
+    FOR             reduce using rule 42 (decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block .)
+    WHILE           reduce using rule 42 (decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block .)
+    VARS            reduce using rule 42 (decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block .)
+    ELSE            shift and go to state 135
+
+
+state 132
+
+    (44) repetition_statement -> FOR ID EQUALS expr TO expr . DO block
+    (46) expr -> expr . PLUS expr
+    (47) expr -> expr . MINUS expr
+    (48) expr -> expr . MULT expr
+    (49) expr -> expr . DIV expr
+    (50) expr -> expr . AND expr
+    (51) expr -> expr . OR expr
+    (52) expr -> expr . LESS_THAN expr
+    (53) expr -> expr . MORE_THAN expr
+    (54) expr -> expr . EQUAL_TO expr
+
+    DO              shift and go to state 136
+    PLUS            shift and go to state 76
+    MINUS           shift and go to state 77
+    MULT            shift and go to state 78
+    DIV             shift and go to state 79
+    AND             shift and go to state 80
+    OR              shift and go to state 81
+    LESS_THAN       shift and go to state 82
+    MORE_THAN       shift and go to state 83
+    EQUAL_TO        shift and go to state 84
+
+
+state 133
+
+    (45) repetition_statement -> WHILE LEFTPAREN expr RIGHTPAREN DO block .
+
+    RIGHTCURLY      reduce using rule 45 (repetition_statement -> WHILE LEFTPAREN expr RIGHTPAREN DO block .)
+    ID              reduce using rule 45 (repetition_statement -> WHILE LEFTPAREN expr RIGHTPAREN DO block .)
+    RETURN          reduce using rule 45 (repetition_statement -> WHILE LEFTPAREN expr RIGHTPAREN DO block .)
+    READ            reduce using rule 45 (repetition_statement -> WHILE LEFTPAREN expr RIGHTPAREN DO block .)
+    WRITE           reduce using rule 45 (repetition_statement -> WHILE LEFTPAREN expr RIGHTPAREN DO block .)
+    IF              reduce using rule 45 (repetition_statement -> WHILE LEFTPAREN expr RIGHTPAREN DO block .)
+    FOR             reduce using rule 45 (repetition_statement -> WHILE LEFTPAREN expr RIGHTPAREN DO block .)
+    WHILE           reduce using rule 45 (repetition_statement -> WHILE LEFTPAREN expr RIGHTPAREN DO block .)
+    VARS            reduce using rule 45 (repetition_statement -> WHILE LEFTPAREN expr RIGHTPAREN DO block .)
+
+
+state 134
+
+    (32) assignment -> ID LEFTSQUARE expr RIGHTSQUARE EQUALS expr PUNT_COMA .
+
+    RIGHTCURLY      reduce using rule 32 (assignment -> ID LEFTSQUARE expr RIGHTSQUARE EQUALS expr PUNT_COMA .)
+    ID              reduce using rule 32 (assignment -> ID LEFTSQUARE expr RIGHTSQUARE EQUALS expr PUNT_COMA .)
+    RETURN          reduce using rule 32 (assignment -> ID LEFTSQUARE expr RIGHTSQUARE EQUALS expr PUNT_COMA .)
+    READ            reduce using rule 32 (assignment -> ID LEFTSQUARE expr RIGHTSQUARE EQUALS expr PUNT_COMA .)
+    WRITE           reduce using rule 32 (assignment -> ID LEFTSQUARE expr RIGHTSQUARE EQUALS expr PUNT_COMA .)
+    IF              reduce using rule 32 (assignment -> ID LEFTSQUARE expr RIGHTSQUARE EQUALS expr PUNT_COMA .)
+    FOR             reduce using rule 32 (assignment -> ID LEFTSQUARE expr RIGHTSQUARE EQUALS expr PUNT_COMA .)
+    WHILE           reduce using rule 32 (assignment -> ID LEFTSQUARE expr RIGHTSQUARE EQUALS expr PUNT_COMA .)
+    VARS            reduce using rule 32 (assignment -> ID LEFTSQUARE expr RIGHTSQUARE EQUALS expr PUNT_COMA .)
+
+
+state 135
+
+    (43) decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block ELSE . block
+    (20) block -> . LEFTCURLY statement_list RIGHTCURLY
+
+    LEFTCURLY       shift and go to state 24
+
+    block                          shift and go to state 137
+
+state 136
+
+    (44) repetition_statement -> FOR ID EQUALS expr TO expr DO . block
+    (20) block -> . LEFTCURLY statement_list RIGHTCURLY
+
+    LEFTCURLY       shift and go to state 24
+
+    block                          shift and go to state 138
+
+state 137
+
+    (43) decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block ELSE block .
+
+    RIGHTCURLY      reduce using rule 43 (decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block ELSE block .)
+    ID              reduce using rule 43 (decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block ELSE block .)
+    RETURN          reduce using rule 43 (decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block ELSE block .)
+    READ            reduce using rule 43 (decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block ELSE block .)
+    WRITE           reduce using rule 43 (decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block ELSE block .)
+    IF              reduce using rule 43 (decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block ELSE block .)
+    FOR             reduce using rule 43 (decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block ELSE block .)
+    WHILE           reduce using rule 43 (decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block ELSE block .)
+    VARS            reduce using rule 43 (decision_statement -> IF LEFTPAREN expr RIGHTPAREN THEN block ELSE block .)
+
+
+state 138
+
+    (44) repetition_statement -> FOR ID EQUALS expr TO expr DO block .
+
+    RIGHTCURLY      reduce using rule 44 (repetition_statement -> FOR ID EQUALS expr TO expr DO block .)
+    ID              reduce using rule 44 (repetition_statement -> FOR ID EQUALS expr TO expr DO block .)
+    RETURN          reduce using rule 44 (repetition_statement -> FOR ID EQUALS expr TO expr DO block .)
+    READ            reduce using rule 44 (repetition_statement -> FOR ID EQUALS expr TO expr DO block .)
+    WRITE           reduce using rule 44 (repetition_statement -> FOR ID EQUALS expr TO expr DO block .)
+    IF              reduce using rule 44 (repetition_statement -> FOR ID EQUALS expr TO expr DO block .)
+    FOR             reduce using rule 44 (repetition_statement -> FOR ID EQUALS expr TO expr DO block .)
+    WHILE           reduce using rule 44 (repetition_statement -> FOR ID EQUALS expr TO expr DO block .)
+    VARS            reduce using rule 44 (repetition_statement -> FOR ID EQUALS expr TO expr DO block .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for ID in state 24 resolved as shift
+WARNING: shift/reduce conflict for RETURN in state 24 resolved as shift
+WARNING: shift/reduce conflict for READ in state 24 resolved as shift
+WARNING: shift/reduce conflict for WRITE in state 24 resolved as shift
+WARNING: shift/reduce conflict for IF in state 24 resolved as shift
+WARNING: shift/reduce conflict for FOR in state 24 resolved as shift
+WARNING: shift/reduce conflict for WHILE in state 24 resolved as shift
+WARNING: shift/reduce conflict for VARS in state 24 resolved as shift
+WARNING: shift/reduce conflict for RIGHTCURLY in state 28 resolved as shift
+WARNING: shift/reduce conflict for ID in state 28 resolved as shift
+WARNING: shift/reduce conflict for RETURN in state 28 resolved as shift
+WARNING: shift/reduce conflict for READ in state 28 resolved as shift
+WARNING: shift/reduce conflict for WRITE in state 28 resolved as shift
+WARNING: shift/reduce conflict for IF in state 28 resolved as shift
+WARNING: shift/reduce conflict for FOR in state 28 resolved as shift
+WARNING: shift/reduce conflict for WHILE in state 28 resolved as shift
+WARNING: shift/reduce conflict for VARS in state 28 resolved as shift
