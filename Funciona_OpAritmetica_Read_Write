@@ -430,10 +430,14 @@ def p_return_statement(p):
 
 def p_read_statement(p):
     '''read_statement : READ LEFTPAREN read_list RIGHTPAREN PUNT_COMA'''
-    # p[3] es la lista de variables a leer
     read_variables = p[3]
-    for elem in read_variables:
-        add_quadruple('READ', None, None, elem)
+    for var_name in read_variables:
+        variable_entry = global_scope_manager.lookup(var_name)
+        if variable_entry is None:
+            print(f"Error: Variable no declarada: {var_name}")
+            continue
+        add_quadruple('READ', None, None, variable_entry.address)
+
 
 def p_read_list(p):
     '''read_list : NAME COMA read_list
@@ -468,6 +472,7 @@ def p_write_list(p):
 def p_decision_statement(p):
     '''decision_statement : IF LEFTPAREN expr RIGHTPAREN THEN block
                           | IF LEFTPAREN expr RIGHTPAREN THEN block ELSE block'''
+
 
 
 def p_repetition_statement(p):
@@ -529,6 +534,7 @@ main ( ) {
     Uno = 5 ;
     write ( Dos , Uno) ;
     read ( Uno ) ;
+    write ( Uno ) ;
 }
 '''
 print("")
