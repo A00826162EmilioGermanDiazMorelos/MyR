@@ -275,8 +275,8 @@ def execute_quadruples():
     for quad in quadruples:
         if quad.operator in ['+', '-', '*', '/']:
             # Operaciones aritméticas
-            op1 = memory.get(quad.operand1, quad.operand1)  # Valor o dirección si es constante/temporal
-            op2 = memory.get(quad.operand2, quad.operand2)  # Valor o dirección si es constante/temporal
+            op1 = memory.get(quad.operand1, quad.operand1) if isinstance(quad.operand1, int) else memory[quad.operand1]
+            op2 = memory.get(quad.operand2, quad.operand2) if isinstance(quad.operand2, int) else memory[quad.operand2]
             result = perform_arithmetic_operation(quad.operator, op1, op2)
             memory[quad.result] = result
         elif quad.operator == '=':
@@ -527,14 +527,11 @@ parser = yacc.yacc()
 test_program3 = '''
 Program Expresiones ;
 vars 
-char Emilio ;
 int Uno , Dos ;
 main ( ) {
-    Dos = 10 + 5 ;
-    Uno = 5 ;
+    Dos = (10 - 5) * 6 ;
+    Uno = (5 + Dos) * 2;
     write ( Dos , Uno) ;
-    read ( Uno ) ;
-    write ( Uno ) ;
 }
 '''
 print("")
@@ -546,3 +543,6 @@ execute_quadruples()
 
 # dos_address = global_scope_manager.lookup("Dos").address
 # print(f"Valor de Dos: {memory.get(dos_address)}")
+
+#read(Uno);
+#write(Uno);
