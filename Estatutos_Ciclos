@@ -524,13 +524,37 @@ def p_ELSE_if(p):
     # Actualizar el cuádruplo GOTOF con la posición del inicio del bloque ELSE
     quadruples[gotof_index].result = len(quadruples)
 
-
-
 def p_repetition_statement(p):
-    '''
-    repetition_statement : FOR NAME EQUALS expr TO expr DO block
-                         | WHILE LEFTPAREN expr RIGHTPAREN DO block
-    '''
+    ''' repetition_statement : NonConditional_Statement
+                             | Condicional_Statement '''
+
+def p_Condicional_Statement(p):
+    ''' Condicional_Statement : WHILE LEFTPAREN expr_While RIGHTPAREN DO block '''
+    global jumps_stack
+    # El cuádruplo GOTOF ya fue creado en expr_While
+    # Procesar el bloque del bucle
+    # ...
+    # Crear cuádruplo GOTO para volver al inicio del bucle
+    start_loop_index = jumps_stack.pop()  # Recuperar la posición de inicio del bucle
+    add_quadruple('GOTO', None, None, start_loop_index)
+    # Completar cuádruplo GOTOF con la posición después del bucle
+    gotof_index = jumps_stack.pop()
+    quadruples[gotof_index].result = len(quadruples)
+
+def p_expr_While(p):
+    ''' expr_While : expr '''
+    global jumps_stack
+    # Evaluar la condición del bucle WHILE y guardar su resultado
+    condition_result = p[1]
+    # Añadir cuádruplo GOTOF pero sin completar el campo de salto
+    add_quadruple('GOTOF', condition_result, None, None)
+    gotof_index = len(quadruples) - 1
+    jumps_stack.append(gotof_index)  # Guardar la posición del GOTOF en la pila
+    # Guardar también la posición de inicio del bucle para el cuádruplo GOTO
+    jumps_stack.append(gotof_index - 1)
+
+def p_NonConditional_Statement(p):
+    ''' NonConditional_Statement : FOR NAME EQUALS expr TO expr DO block '''
 
 def p_expr(p):
     '''expr : expr PLUS expr
@@ -581,13 +605,14 @@ parser = yacc.yacc()
 test_program3 = '''
 Program Expresiones ;
 vars 
-int Uno , Dos ;
+int Uno;
 main ( ) {
-    Uno = 0 ;
-    Dos = 11 ;
-
-    for Uno = 1 to 5 do
-    { write ( Dos ) ; }
+    read ( Uno ) ;
+    while ( Uno < 6 ) do
+    { 
+    write ( Uno ) ; 
+    Uno = Uno + 1 ;
+    }
 
 }
 '''
