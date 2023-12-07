@@ -1,0 +1,605 @@
+import ply.lex as lex
+import ply.yacc as yacc
+
+reserved = {
+    'Program': 'PROGRAM',
+    'main': 'MAIN',
+    'int': 'INT',
+    'flot': 'FLOT',
+    'char': 'CHAR',
+    'void': 'VOID',
+    'vars': 'VARS',
+    'function': 'FUNCTION',
+    'return': 'RETURN',
+    'read': 'READ',
+    'write': 'WRITE',
+    'If': 'IF',
+    'then': 'THEN',
+    'else': 'ELSE',
+    'while': 'WHILE',
+    'for': 'FOR',
+    'to': 'TO',
+    'do': 'DO'
+}
+
+tokens = ['PLUS', 'MINUS', 'MULT', 'DIV', 'EQUALS', 'AND', 'OR', 'LESS_THAN', 'MORE_THAN',
+          'EQUAL_TO', 'NUMBER', 'CONST_FLOAT', 'NAME', 'LEFTPAREN', 'RIGHTPAREN', 'LEFTCURLY', 'RIGHTCURLY',
+          'LEFTSQUARE', 'RIGHTSQUARE', 'PUNT_COMA', 'COMA', 'COMILLAS'] + list(reserved.values())
+
+# Ignorar espacios en blanco y saltos de línea
+t_ignore = ' \t'
+
+# Expresiones regulares para operaciones aritméticas
+t_PLUS = r'\+'
+t_MINUS = r'-'
+t_MULT = r'\*'
+t_DIV = r'/'
+t_EQUALS = r'='
+
+# Expresiones regulares para operaciones lógicas
+t_AND = r'&'
+t_OR = r'\|'
+t_LESS_THAN = r'<'
+t_MORE_THAN = r'>'
+t_EQUAL_TO = r'=='
+
+# Expresiones regulares para abrir y cerrar paréntesis, corchetes y llaves, y signos de puntuación
+t_LEFTPAREN = r'\('
+t_RIGHTPAREN = r'\)'
+t_LEFTCURLY = r'\{'
+t_RIGHTCURLY = r'\}'
+t_LEFTSQUARE = r'\['
+t_RIGHTSQUARE = r'\]'
+t_PUNT_COMA = r';'
+t_COMA = r','
+t_COMILLAS = r'"'
+
+# Expresión regular para reconocer números enteros
+def t_NUMBER(t):
+    r'\d+'
+    t.value = int(t.value)
+    return t
+
+def t_CONST_FLOAT(t):
+    r'\d\.\d+'
+    t.value = float(t.value)
+    return t
+
+def t_NAME(t):
+    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    t.type = reserved.get(t.value, 'NAME')  # Checa palabras reservadas
+    return t
+
+# Manejo de errores
+def t_error(t):
+    # print(f"Caracter ilegal: {t.value[0]}")
+    t.lexer.skip(1)
+
+# Construir el lexer
+lexer = lex.lex()
+
+# PARSER
+class ProcedureEntry:
+    def __init__(self, name, return_type, parameters, start_address):
+        self.name = name
+        self.return_type = return_type
+        self.parameters = parameters  # Esto podría ser una lista de (tipo, nombre)
+        self.start_address = start_address
+        self.local_variables = {}  # Esto es un diccionario para las variables locales
+
+    def add_variable(self, var_name, var_type):
+        self.local_variables[var_name] = var_type
+
+    def __repr__(self):
+        return (f"Procedure {self.name}: Return Type: {self.return_type}, "
+                f"Parameters: {self.parameters}, Start Address: {self.start_address}, "
+                f"Local Variables: {self.local_variables}")
+
+class ProcedureDirectory:
+    def __init__(self):
+        self.procedures = {}
+
+    def add_procedure(self, name, return_type, parameters, start_address):
+        if name in self.procedures:
+            raise ValueError(f"Procedure '{name}' already defined")
+        self.procedures[name] = ProcedureEntry(name, return_type, parameters, start_address)
+
+    def get_procedure(self, name):
+        return self.procedures.get(name)
+
+    def __repr__(self):
+        return "\n".join(str(proc) for proc in self.procedures.values())
+
+procedure_directory = ProcedureDirectory()
+
+# Tabla de simbolos
+
+class SymbolTableEntry:
+    def __init__(self, name, symbol_type, scope, address=None, value=None):
+        self.name = name
+        self.symbol_type = symbol_type
+        self.scope = scope
+        self.address = address
+        self.value = value  # Valor de la variable
+
+    def __repr__(self):
+        return f"Symbol(name={self.name}, type={self.symbol_type}, scope={self.scope}, address={self.address}, value={self.value})"
+
+class SymbolTable:
+    def __init__(self):
+        self.table = {}
+
+    def add(self, name, symbol_type, scope, address=None, value=None):
+        if name in self.table:
+            raise ValueError(f"Symbol {name} already defined in current scope")
+        entry = SymbolTableEntry(name, symbol_type, scope, address, value)
+        self.table[name] = entry
+
+    def update_value(self, name, value):
+        if name in self.table:
+            self.table[name].value = value
+        else:
+            raise ValueError(f"Symbol {name} not found in current scope")
+
+    def lookup(self, name):
+        return self.table.get(name)
+
+    def __repr__(self):
+        return str(self.table)
+
+class ScopeManager:
+    def __init__(self):
+        self.global_scope = SymbolTable()
+        self.scopes = [self.global_scope]
+
+    def enter_scope(self):
+        self.scopes.append(SymbolTable())
+
+    def exit_scope(self):
+        self.scopes.pop()
+
+    def current_scope(self):
+        return self.scopes[-1]
+
+    def add_symbol(self, name, symbol_type, scope, address=None, value=None):
+        self.current_scope().add(name, symbol_type, scope, address, value)
+
+    def update_symbol_value(self, name, value):
+        for scope in reversed(self.scopes):
+            try:
+                scope.update_value(name, value)
+                return
+            except ValueError:
+                continue
+        raise ValueError(f"Symbol {name} not found in any scope")
+
+    def lookup(self, name):
+        for scope in reversed(self.scopes):
+            symbol = scope.lookup(name)
+            if symbol:
+                return symbol
+        return None
+
+    def lookup_by_address(self, address):
+        for scope in reversed(self.scopes):
+            for symbol in scope.table.values():
+                if symbol.address == address:
+                    return symbol
+        return None
+
+# Cuádruplos
+class Quadruple:
+    def __init__(self, operator, operand1, operand2, result):
+        self.operator = operator
+        self.operand1 = operand1
+        self.operand2 = operand2
+        self.result = result
+
+    def __repr__(self):
+        return f"({self.operator}, {self.operand1}, {self.operand2}, {self.result})"
+
+quadruples = []
+
+def add_quadruple(operator, operand1, operand2, result):
+    quadruple = Quadruple(operator, operand1, operand2, result)
+    quadruples.append(quadruple)
+    return quadruple
+
+def get_quadruple(index):
+    return quadruples[index]
+
+# Funciones para manejar cuádruplos
+def print_quadruples():
+    for i, quad in enumerate(quadruples):
+        print(f"{i+1}: {quad}")
+
+# Generación de Variables Temporales
+temp_counter = 0
+
+def generate_temporary():
+    global temp_counter
+    temp_name = f"temp{temp_counter}"
+    temp_counter += 1
+    return temp_name
+
+# Generación de direcciones de memoria
+memory_address_counter = 0
+
+def generate_memory_address():
+    global memory_address_counter
+    address = memory_address_counter
+    memory_address_counter += 1
+    return address
+
+# Pilas de Operadores, Operandos y Saltos
+def evaluate_expression(expr):
+    if isinstance(expr, SymbolTableEntry):
+        # Si expr es una entrada de la tabla de símbolos (una variable), devuelve su dirección
+        return expr.address
+    elif isinstance(expr, (int, float)):
+        # Si expr es un valor constante, asignarlo a una dirección temporal y devolver esa dirección
+        temp_address = generate_temporary()
+        add_quadruple('=', expr, None, temp_address)
+        return temp_address
+    elif isinstance(expr, tuple):
+        # Si expr es una operación aritmética o lógica
+        operator, operand1, operand2 = expr
+        address1 = evaluate_expression(operand1)
+        address2 = evaluate_expression(operand2)
+        result_address = generate_temporary()
+        if operator in ['LESS_THAN', 'MORE_THAN', 'EQUAL_TO', '+', '-', '*', '/']:
+            add_quadruple(operator, address1, address2, result_address)
+        else:
+            # Manejar otros operadores si los hay
+            pass
+        return result_address
+    elif isinstance(expr, str):
+        # Si expr es un nombre de variable (una cadena)
+        variable_entry = global_scope_manager.lookup(expr)
+        if variable_entry is None:
+            print(f"Error: Variable no declarada: {expr}")
+            return None
+        return variable_entry.address
+    else:
+        # En caso de que expr sea algo inesperado
+        print(f"Error: Tipo de expresión no reconocido: {expr}")
+        return None
+
+operators_stack = []
+operands_stack = []
+jumps_stack = []
+symbol_table = []
+global_scope_manager = ScopeManager()
+memory = {}
+
+
+def execute_quadruples():
+    global memory
+    pc = 0  # Contador del programa para índice de cuádruplo
+    while pc < len(quadruples):
+        quad = quadruples[pc]
+        if quad.operator in ['+', '-', '*', '/']:
+            # Operaciones aritméticas
+            op1 = memory.get(quad.operand1, quad.operand1) if isinstance(quad.operand1, int) else memory[quad.operand1]
+            op2 = memory.get(quad.operand2, quad.operand2) if isinstance(quad.operand2, int) else memory[quad.operand2]
+            result = perform_arithmetic_operation(quad.operator, op1, op2)
+            memory[quad.result] = result
+        elif quad.operator in ['<', '>', '==']:
+            # Operaciones lógicas
+            op1 = memory.get(quad.operand1, quad.operand1) if isinstance(quad.operand1, int) else memory[quad.operand1]
+            op2 = memory.get(quad.operand2, quad.operand2) if isinstance(quad.operand2, int) else memory[quad.operand2]
+            result = perform_logical_operation(quad.operator, op1, op2)
+            memory[quad.result] = result
+        elif quad.operator == '=':
+            # Asignación
+            value = memory.get(quad.operand1, quad.operand1) if isinstance(quad.operand1, int) else memory[
+                quad.operand1]
+            memory[quad.result] = value
+        elif quad.operator == 'READ':
+            # Lectura de un valor
+            value = read_value()
+            memory[quad.result] = value
+        elif quad.operator == 'WRITE':
+            # Escritura de un valor
+            value = memory.get(quad.result, quad.result) if isinstance(quad.result, int) else memory[quad.result]
+            print(value)
+        elif quad.operator == 'GOTOF':
+            condition = memory.get(quad.operand1, quad.operand1)
+            if not condition:
+                pc = quad.result
+                continue
+        elif quad.operator == 'GOTO':
+            pc = quad.result
+            continue
+        pc += 1
+
+def perform_arithmetic_operation(operator, operand1, operand2):
+    if operator == '+':
+        return operand1 + operand2
+    elif operator == '-':
+        return operand1 - operand2
+    elif operator == '*':
+        return operand1 * operand2
+    elif operator == '/':
+        if operand2 != 0:
+            return operand1 / operand2
+        else:
+            print("Error: División por cero")
+            return None
+
+def perform_logical_operation(operator, operand1, operand2):
+    if operator == '<':
+        return operand1 < operand2
+    elif operator == '>':
+        return operand1 > operand2
+    elif operator == '==':
+        return operand1 == operand2
+    else:
+        print("Error: Operador lógico no reconocido")
+        return None
+
+def read_value():
+    while True:
+        try:
+            return int(input("Enter value: "))
+        except ValueError:
+            print("Invalid input, please enter an integer.")
+
+precedence = (
+    ('left', 'OR', 'AND'),  # Asociativo a la izquierda
+    ('nonassoc', 'LESS_THAN', 'MORE_THAN', 'EQUAL_TO'),  # No asociativo
+    ('left', 'PLUS', 'MINUS'),  # Asociativo a la izquierda
+    ('left', 'MULT', 'DIV'),  # Asociativo a la izquierda
+    ('right', 'UMINUS'),  # Asociativo a la derecha para el unario negativo, si existe
+)
+
+# Estructura del programa
+
+def p_program(p):
+    '''program : PROGRAM NAME PUNT_COMA vars multi_functions MAIN LEFTPAREN RIGHTPAREN block'''
+
+def p_vars(p):
+    '''vars : VARS var_list
+            | empty'''
+    # No hay cambios en esta regla.
+
+def p_var_list(p):
+    '''var_list : var var_list
+                | var'''
+    # No hay cambios en esta regla.
+
+def p_var(p):
+    '''var : type var_names PUNT_COMA'''
+    symbol_type = p[1]
+    for symbol_name in p[2]:
+        address = generate_memory_address()
+        global_scope_manager.add_symbol(symbol_name, symbol_type, 'global', address=address)
+        print(global_scope_manager.lookup(symbol_name))
+
+def p_var_names(p):
+    '''var_names : var_names COMA NAME
+                 | NAME'''
+    if len(p) == 4:
+        p[0] = p[1] + [p[3]]
+    else:
+        p[0] = [p[1]]
+
+def p_empty(p):
+    'empty :'
+    pass
+
+def p_type(p):
+    '''type : INT
+            | FLOT
+            | CHAR
+            | VOID'''
+    p[0] = p[1]
+
+def p_multi_functions(p):
+    '''multi_functions : function multi_functions
+                       | empty'''
+
+def p_function(p):
+    '''function : FUNCTION type NAME LEFTPAREN param_list RIGHTPAREN PUNT_COMA vars block '''
+
+def p_param_list(p):
+    '''param_list : param COMA param_list
+                  | param
+                  | empty'''
+
+def p_param(p):
+    '''param : INT NAME
+             | FLOT NAME
+             | CHAR NAME'''
+
+def p_block(p):
+    '''block : LEFTCURLY statement_list RIGHTCURLY'''
+
+def p_statement_list(p):
+    '''statement_list : statement statement_list
+                      | statement'''
+
+def p_statement(p):
+    '''statement : assignment
+                 | function_call
+                 | return_statement
+                 | read_statement
+                 | write_statement
+                 | decision_statement
+                 | repetition_statement'''
+
+def p_assignment(p):
+    '''assignment : NAME EQUALS expr PUNT_COMA
+                  | NAME LEFTSQUARE expr RIGHTSQUARE EQUALS expr PUNT_COMA'''
+    variable_name = p[1]
+    if len(p) == 5:
+        # Asignación simple
+        expression_result = p[3]  # Resultado de la expresión
+        variable_entry = global_scope_manager.lookup(variable_name)
+        if variable_entry is None:
+            raise ValueError(f"Variable {variable_name} not declared")
+        # Generar cuádruplo para la asignación
+        add_quadruple('=', expression_result, None, variable_entry.address)
+
+def p_function_call(p):
+    '''function_call : NAME LEFTPAREN var RIGHTPAREN PUNT_COMA
+                     | NAME LEFTPAREN RIGHTPAREN PUNT_COMA'''
+
+def p_return_statement(p):
+    '''return_statement : RETURN LEFTPAREN expr RIGHTPAREN PUNT_COMA'''
+
+def p_read_statement(p):
+    '''read_statement : READ LEFTPAREN read_list RIGHTPAREN PUNT_COMA'''
+    read_variables = p[3]
+    for var_name in read_variables:
+        variable_entry = global_scope_manager.lookup(var_name)
+        if variable_entry is None:
+            print(f"Error: Variable no declarada: {var_name}")
+            continue
+        add_quadruple('READ', None, None, variable_entry.address)
+
+def p_read_list(p):
+    '''read_list : NAME COMA read_list
+                 | NAME'''
+    if len(p) == 4:
+        # Agregar la variable actual a la lista y combinar con las siguientes
+        p[0] = [p[1]] + p[3]
+    else:
+        # Solo una variable
+        p[0] = [p[1]]
+
+def p_write_statement(p):
+    '''write_statement : WRITE LEFTPAREN write_list RIGHTPAREN PUNT_COMA'''
+    # p[3] es la lista de expresiones o variables a escribir
+    write_elements = p[3]
+    for elem in write_elements:
+        # Evalúa la expresión o variable y genera un cuádruplo WRITE
+        evaluated_elem = evaluate_expression(elem)
+        add_quadruple('WRITE', None, None, evaluated_elem)
+
+def p_write_list(p):
+    '''write_list : expr COMA write_list
+                  | expr'''
+    if len(p) == 4:
+        # Si hay más de un elemento en la lista, combinar el elemento actual con el resto
+        p[0] = [p[1]] + p[3]
+    else:
+        # Solo un elemento en la lista
+        p[0] = [p[1]]
+
+def p_decision_statement(p):
+    ''' decision_statement : IF LEFTPAREN expr_if RIGHTPAREN THEN block
+                           | IF LEFTPAREN expr_if RIGHTPAREN THEN block ELSE_if block '''
+    global jumps_stack
+    # ... código para procesar el bloque THEN ...
+    if len(p) == 8:  # IF-THEN-ELSE
+        # ... código para procesar el bloque ELSE ...
+        # Actualizar cuádruplo GOTO para saltar al final del IF
+        goto_index = jumps_stack.pop()
+        quadruples[goto_index].result = len(quadruples)
+    else:  # Solo IF-THEN
+        # Actualizar cuádruplo GOTOF para saltar al final del THEN
+        gotof_index = jumps_stack.pop()
+        quadruples[gotof_index].result = len(quadruples)
+
+def p_expr_if(p):
+    ''' expr_if : expr '''
+    global jumps_stack
+    # Aquí, suponiendo que 'expr' es la condición y ya fue evaluada y su resultado está en 'condition_result'
+    condition_result = p[1]
+    # Añadir cuádruplo GOTOF (pero sin completar el campo de salto)
+    add_quadruple('GOTOF', condition_result, None, None)
+    # Empujar la posición del GOTOF en la pila de saltos
+    jumps_stack.append(len(quadruples) - 1)
+
+def p_ELSE_if(p):
+    ''' ELSE_if : ELSE '''
+    global jumps_stack
+    # Obtener la posición del cuádruplo GOTOF del tope de la pila
+    gotof_index = jumps_stack.pop()
+    # Añadir cuádruplo GOTO (salto al final del IF después del bloque THEN)
+    add_quadruple('GOTO', None, None, None)
+    # Empujar la posición del GOTO en la pila de saltos
+    jumps_stack.append(len(quadruples) - 1)
+    # Actualizar el cuádruplo GOTOF con la posición del inicio del bloque ELSE
+    quadruples[gotof_index].result = len(quadruples)
+
+
+
+def p_repetition_statement(p):
+    '''
+    repetition_statement : FOR NAME EQUALS expr TO expr DO block
+                         | WHILE LEFTPAREN expr RIGHTPAREN DO block
+    '''
+
+def p_expr(p):
+    '''expr : expr PLUS expr
+            | expr MINUS expr
+            | expr MULT expr
+            | expr DIV expr
+            | expr AND expr
+            | expr OR expr
+            | expr LESS_THAN expr
+            | expr MORE_THAN expr
+            | expr EQUAL_TO expr
+            | LEFTPAREN expr RIGHTPAREN
+            | MINUS expr %prec UMINUS
+            | NUMBER
+            | NAME
+            | CONST_FLOAT'''
+
+    if len(p) == 4:
+        # Operaciones binarias
+        if p[2] in ['+', '-', '*', '/', '&', '|', '<', '>', '==']:
+            operand1 = p[1]
+            operand2 = p[3]
+            result_address = generate_temporary()
+            add_quadruple(p[2], operand1, operand2, result_address)
+            p[0] = result_address
+        else:
+            # Para operaciones con paréntesis
+            p[0] = p[2]
+    elif len(p) == 3:
+        # Operaciones unarias (como el negativo)
+        operand = p[2]
+        result_address = generate_temporary()
+        add_quadruple(p[1], operand, None, result_address)
+        p[0] = result_address
+    else:
+        # Números, nombres de variables o constantes flotantes
+        p[0] = evaluate_expression(p[1])
+
+def p_error(p):
+    if p:
+        print(f"Syntax error at token {p.type} - Line: {p.lineno}, Position: {p.lexpos}")
+    else:
+        print("Syntax error at EOF")
+
+
+parser = yacc.yacc()
+
+test_program3 = '''
+Program Expresiones ;
+vars 
+int Uno , Dos ;
+main ( ) {
+    Uno = 0 ;
+    Dos = 11 ;
+
+    for Uno = 1 to 5 do
+    { write ( Dos ) ; }
+
+}
+'''
+
+print("")
+print(test_program3)
+
+print("")
+parser.parse(test_program3, lexer=lexer)
+
+print("")
+print_quadruples()
+
+print("")
+execute_quadruples()
