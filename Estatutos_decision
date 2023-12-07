@@ -72,7 +72,7 @@ def t_NAME(t):
 
 # Manejo de errores
 def t_error(t):
-    #print(f"Caracter ilegal: {t.value[0]}")
+    # print(f"Caracter ilegal: {t.value[0]}")
     t.lexer.skip(1)
 
 # Construir el lexer
@@ -112,7 +112,7 @@ class ProcedureDirectory:
 
 procedure_directory = ProcedureDirectory()
 
-#Tabla de simbolos
+# Tabla de simbolos
 
 class SymbolTableEntry:
     def __init__(self, name, symbol_type, scope, address=None, value=None):
@@ -146,7 +146,6 @@ class SymbolTable:
 
     def __repr__(self):
         return str(self.table)
-
 
 class ScopeManager:
     def __init__(self):
@@ -188,7 +187,7 @@ class ScopeManager:
                     return symbol
         return None
 
-#Cuádruplos
+# Cuádruplos
 class Quadruple:
     def __init__(self, operator, operand1, operand2, result):
         self.operator = operator
@@ -209,11 +208,10 @@ def add_quadruple(operator, operand1, operand2, result):
 def get_quadruple(index):
     return quadruples[index]
 
-
 # Funciones para manejar cuádruplos
 def print_quadruples():
     for i, quad in enumerate(quadruples):
-        print(f"{i}: {quad}")
+        print(f"{i+1}: {quad}")
 
 # Generación de Variables Temporales
 temp_counter = 0
@@ -249,19 +247,19 @@ def evaluate_expression(expr):
         address1 = evaluate_expression(operand1)
         address2 = evaluate_expression(operand2)
         result_address = generate_temporary()
-        add_quadruple(operator, address1, address2, result_address)
+        if operator in ['LESS_THAN', 'MORE_THAN', 'EQUAL_TO', '+', '-', '*', '/']:
+            add_quadruple(operator, address1, address2, result_address)
+        else:
+            # Manejar otros operadores si los hay
+            pass
         return result_address
     elif isinstance(expr, str):
-        if expr.startswith("temp"):
-            # Si es una variable temporal, simplemente devolver su nombre
-            return expr
-        else:
-            # Si es un nombre de variable (una cadena)
-            variable_entry = global_scope_manager.lookup(expr)
-            if variable_entry is None:
-                print(f"Error: Variable no declarada: {expr}")
-                return None
-            return variable_entry.address
+        # Si expr es un nombre de variable (una cadena)
+        variable_entry = global_scope_manager.lookup(expr)
+        if variable_entry is None:
+            print(f"Error: Variable no declarada: {expr}")
+            return None
+        return variable_entry.address
     else:
         # En caso de que expr sea algo inesperado
         print(f"Error: Tipo de expresión no reconocido: {expr}")
@@ -274,53 +272,46 @@ symbol_table = []
 global_scope_manager = ScopeManager()
 memory = {}
 
+
 def execute_quadruples():
     global memory
-    pc = 0  # Program Counter para llevar la cuenta del índice del cuádruplo actual
+    pc = 0  # Contador del programa para índice de cuádruplo
     while pc < len(quadruples):
         quad = quadruples[pc]
         if quad.operator in ['+', '-', '*', '/']:
             # Operaciones aritméticas
-            op1 = memory.get(quad.operand1, quad.operand1)  # Valor o dirección si es constante/temporal
-            op2 = memory.get(quad.operand2, quad.operand2)  # Valor o dirección si es constante/temporal
+            op1 = memory.get(quad.operand1, quad.operand1) if isinstance(quad.operand1, int) else memory[quad.operand1]
+            op2 = memory.get(quad.operand2, quad.operand2) if isinstance(quad.operand2, int) else memory[quad.operand2]
             result = perform_arithmetic_operation(quad.operator, op1, op2)
             memory[quad.result] = result
-        elif quad.operator in ['>', '<', '==']:
+        elif quad.operator in ['<', '>', '==']:
             # Operaciones lógicas
-            op1 = memory.get(quad.operand1, quad.operand1)
-            op2 = memory.get(quad.operand2, quad.operand2)
+            op1 = memory.get(quad.operand1, quad.operand1) if isinstance(quad.operand1, int) else memory[quad.operand1]
+            op2 = memory.get(quad.operand2, quad.operand2) if isinstance(quad.operand2, int) else memory[quad.operand2]
             result = perform_logical_operation(quad.operator, op1, op2)
             memory[quad.result] = result
         elif quad.operator == '=':
             # Asignación
-            value = memory.get(quad.operand1, quad.operand1)
+            value = memory.get(quad.operand1, quad.operand1) if isinstance(quad.operand1, int) else memory[
+                quad.operand1]
             memory[quad.result] = value
-            symbol_entry = global_scope_manager.lookup_by_address(quad.result)
-            if symbol_entry:
-                symbol_entry.value = value
-        elif quad.operator == 'GOTO':
-            # Salto incondicional
-            pc = quad.result
-            continue  # Salta a la siguiente iteración sin incrementar pc
-        elif quad.operator == 'GOTOF':
-            # Salto condicional
-            condition = memory.get(quad.operand1, quad.operand1)
-            if not condition:
-                pc = quad.result
-                continue  # Salta a la siguiente iteración sin incrementar pc
         elif quad.operator == 'READ':
             # Lectura de un valor
             value = read_value()
             memory[quad.result] = value
-            symbol_entry = global_scope_manager.lookup_by_address(quad.result)
-            if symbol_entry:
-                symbol_entry.value = value
         elif quad.operator == 'WRITE':
             # Escritura de un valor
-            value = memory.get(quad.result, quad.result)
+            value = memory.get(quad.result, quad.result) if isinstance(quad.result, int) else memory[quad.result]
             print(value)
-
-        pc += 1  # Incrementa el contador del programa
+        elif quad.operator == 'GOTOF':
+            condition = memory.get(quad.operand1, quad.operand1)
+            if not condition:
+                pc = quad.result
+                continue
+        elif quad.operator == 'GOTO':
+            pc = quad.result
+            continue
+        pc += 1
 
 def perform_arithmetic_operation(operator, operand1, operand2):
     if operator == '+':
@@ -337,10 +328,10 @@ def perform_arithmetic_operation(operator, operand1, operand2):
             return None
 
 def perform_logical_operation(operator, operand1, operand2):
-    if operator == '>':
-        return operand1 > operand2
-    elif operator == '<':
+    if operator == '<':
         return operand1 < operand2
+    elif operator == '>':
+        return operand1 > operand2
     elif operator == '==':
         return operand1 == operand2
     else:
@@ -354,13 +345,12 @@ def read_value():
         except ValueError:
             print("Invalid input, please enter an integer.")
 
-
 precedence = (
-    ('left', 'OR', 'AND'),             # Asociativo a la izquierda
+    ('left', 'OR', 'AND'),  # Asociativo a la izquierda
     ('nonassoc', 'LESS_THAN', 'MORE_THAN', 'EQUAL_TO'),  # No asociativo
     ('left', 'PLUS', 'MINUS'),  # Asociativo a la izquierda
-    ('left', 'MULT', 'DIV'),    # Asociativo a la izquierda
-    ('right', 'UMINUS'),        # Asociativo a la derecha para el unario negativo, si existe
+    ('left', 'MULT', 'DIV'),  # Asociativo a la izquierda
+    ('right', 'UMINUS'),  # Asociativo a la derecha para el unario negativo, si existe
 )
 
 # Estructura del programa
@@ -393,7 +383,6 @@ def p_var_names(p):
         p[0] = p[1] + [p[3]]
     else:
         p[0] = [p[1]]
-
 
 def p_empty(p):
     'empty :'
@@ -439,7 +428,6 @@ def p_statement(p):
                  | decision_statement
                  | repetition_statement'''
 
-
 def p_assignment(p):
     '''assignment : NAME EQUALS expr PUNT_COMA
                   | NAME LEFTSQUARE expr RIGHTSQUARE EQUALS expr PUNT_COMA'''
@@ -470,7 +458,6 @@ def p_read_statement(p):
             continue
         add_quadruple('READ', None, None, variable_entry.address)
 
-
 def p_read_list(p):
     '''read_list : NAME COMA read_list
                  | NAME'''
@@ -500,26 +487,44 @@ def p_write_list(p):
         # Solo un elemento en la lista
         p[0] = [p[1]]
 
-
 def p_decision_statement(p):
-    '''decision_statement : IF LEFTPAREN expr RIGHTPAREN THEN block
-                          | IF LEFTPAREN expr RIGHTPAREN THEN block ELSE block'''
-    condition_result = p[3]  # Resultado de evaluar la condición del IF
-    jump_false_index = len(quadruples)  # Índice del cuádruplo de salto en falso
-    add_quadruple('GOTOF', condition_result, None, None)  # Cuádruplo de salto condicional
-    # Procesar bloque THEN
-    # Los cuádruplos para este bloque se generan automáticamente al parsear el bloque
-    if len(p) == 8:
-        # Caso con bloque ELSE
-        jump_end_index = len(quadruples)  # Índice para saltar al final del bloque ELSE
-        add_quadruple('GOTO', None, None, None)  # Cuádruplo de salto incondicional
-        quadruples[jump_false_index].result = len(quadruples)  # Actualizar índice de salto en falso al inicio del ELSE
-        # Procesar bloque ELSE
-        # Los cuádruplos para este bloque se generan automáticamente al parsear el bloque
-        quadruples[jump_end_index].result = len(quadruples)  # Actualizar índice de salto al final del ELSE
-    else:
-        # Caso sin bloque ELSE
-        quadruples[jump_false_index].result = len(quadruples)  # Actualizar índice de salto en falso al final del THEN
+    ''' decision_statement : IF LEFTPAREN expr_if RIGHTPAREN THEN block
+                           | IF LEFTPAREN expr_if RIGHTPAREN THEN block ELSE_if block '''
+    global jumps_stack
+    # ... código para procesar el bloque THEN ...
+    if len(p) == 8:  # IF-THEN-ELSE
+        # ... código para procesar el bloque ELSE ...
+        # Actualizar cuádruplo GOTO para saltar al final del IF
+        goto_index = jumps_stack.pop()
+        quadruples[goto_index].result = len(quadruples)
+    else:  # Solo IF-THEN
+        # Actualizar cuádruplo GOTOF para saltar al final del THEN
+        gotof_index = jumps_stack.pop()
+        quadruples[gotof_index].result = len(quadruples)
+
+def p_expr_if(p):
+    ''' expr_if : expr '''
+    global jumps_stack
+    # Aquí, suponiendo que 'expr' es la condición y ya fue evaluada y su resultado está en 'condition_result'
+    condition_result = p[1]
+    # Añadir cuádruplo GOTOF (pero sin completar el campo de salto)
+    add_quadruple('GOTOF', condition_result, None, None)
+    # Empujar la posición del GOTOF en la pila de saltos
+    jumps_stack.append(len(quadruples) - 1)
+
+def p_ELSE_if(p):
+    ''' ELSE_if : ELSE '''
+    global jumps_stack
+    # Obtener la posición del cuádruplo GOTOF del tope de la pila
+    gotof_index = jumps_stack.pop()
+    # Añadir cuádruplo GOTO (salto al final del IF después del bloque THEN)
+    add_quadruple('GOTO', None, None, None)
+    # Empujar la posición del GOTO en la pila de saltos
+    jumps_stack.append(len(quadruples) - 1)
+    # Actualizar el cuádruplo GOTOF con la posición del inicio del bloque ELSE
+    quadruples[gotof_index].result = len(quadruples)
+
+
 
 def p_repetition_statement(p):
     '''repetition_statement : FOR NAME EQUALS expr TO expr DO block
@@ -540,23 +545,18 @@ def p_expr(p):
             | NUMBER
             | NAME
             | CONST_FLOAT'''
+
     if len(p) == 4:
-        if p[2] in ['+', '-', '*', '/']:
-            # Operaciones aritméticas o lógicas básicas
-            operand1 = evaluate_expression(p[1])
-            operand2 = evaluate_expression(p[3])
-            result_address = generate_temporary()
-            add_quadruple(p[2], operand1, operand2, result_address)
-            p[0] = result_address
-        elif p[2] in ['<', '>', '==']:
-            # Operaciones relacionales
-            operand1 = evaluate_expression(p[1])
-            operand2 = evaluate_expression(p[3])
+        # Operaciones binarias
+        if p[2] in ['+', '-', '*', '/', '&', '|', '<', '>', '==']:
+            operand1 = p[1]
+            operand2 = p[3]
             result_address = generate_temporary()
             add_quadruple(p[2], operand1, operand2, result_address)
             p[0] = result_address
         else:
-            p[0] = p[2]  # Para operaciones con paréntesis
+            # Para operaciones con paréntesis
+            p[0] = p[2]
     elif len(p) == 3:
         # Operaciones unarias (como el negativo)
         operand = p[2]
@@ -573,38 +573,32 @@ def p_error(p):
     else:
         print("Syntax error at EOF")
 
+
 parser = yacc.yacc()
 
 test_program3 = '''
-Program Expresiones ;
+Program Decisions ;
 vars 
-char Emilio ;
-int Uno , Dos , Tres ;
+int Tres ;
 main ( ) {
-    Uno = 5 ;
-    Dos = 10 + 5 ;
     read ( Tres ) ;
-    
-    If ( Tres > 5 ) then 
-    { write ( Uno ) ; }
-    
-    write ( Dos ) ; 
+    If ( Tres > 20) then 
+    { write ( Tres ) ; }
+    else
+    { 
+    Tres = 1 ;
+    write ( Tres ) ; 
+    }
 }
 '''
-#lexer.input(test_program3)
-#while True:
- #   tok = lexer.token()
-  #  if not tok:
-   #     break
-    #print(tok)
-
+print("")
+print(test_program3)
 
 print("")
 parser.parse(test_program3, lexer=lexer)
+
 print("")
 print_quadruples()
+
 print("")
 execute_quadruples()
-
-# dos_address = global_scope_manager.lookup("Dos").address
-# print(f"Valor de Dos: {memory.get(dos_address)}")
