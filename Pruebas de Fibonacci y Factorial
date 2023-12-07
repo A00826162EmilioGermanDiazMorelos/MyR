@@ -1,0 +1,40 @@
+test_Fibonacci = '''
+Program Fibonacci ;
+vars 
+int Uno , Primero , Segundo , Contador;
+int Term, Temporal, Parada ;
+main ( ) {
+    Uno = 1 ;
+    Primero = 0 ;
+    Segundo = 1 ;
+    Contador = 2 ;
+    read ( Term ) ;
+    write ( Primero ) ;
+    write ( Segundo ) ;
+    while ( Contador < Term ) do 
+    {
+    Temporal = Primero + Segundo ;
+    write ( Temporal ) ;
+    Primero = Segundo ;
+    Segundo = Temporal ;
+    Contador = Contador + Uno ;
+    }
+    
+}
+'''
+
+test_Factorial = '''
+Program Factorial ;
+vars 
+int Uno , Fact , Cont;
+main ( ) {
+    Uno = 1 ;
+    Fact = 1 ;
+    read ( Cont ) ;
+    while ( Cont > Uno ) do {
+    Fact = Fact * Cont ;
+    Cont = Cont - Uno;
+    }
+    write ( Fact ) ;
+}
+'''
